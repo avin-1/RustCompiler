@@ -1,0 +1,272 @@
+================================================================================
+                    COMPILER ARCHITECTURE DIAGRAM
+                    Lex and Bison Only Implementation
+================================================================================
+
+                            INPUT: test.rs
+                                  |
+                                  v
+        ┌─────────────────────────────────────────────────┐
+        │         PHASE 1: LEXICAL ANALYSIS               │
+        │              (lexer.l)                          │
+        │                                                 │
+        │  • Regular expressions → DFA                    │
+        │  • Tokenization: keywords, identifiers, etc.    │
+        │  • Line number tracking                         │
+        │  • Comment removal                              │
+        └─────────────────────────────────────────────────┘
+                                  |
+                        Token Stream: [KW: let] [ID: x] ...
+                                  |
+                                  v
+        ┌─────────────────────────────────────────────────┐
+        │         PHASE 2: SYNTAX ANALYSIS                │
+        │         (parser_standalone.y)                   │
+        │                                                 │
+        │  • Context-Free Grammar                         │
+        │  • LALR(1) parsing algorithm                    │
+        │  • Error recovery                               │
+        │  • Validates program structure                  │
+        └─────────────────────────────────────────────────┘
+                                  |
+                    Parse successful / error
+                                  |
+                                  v
+        ┌─────────────────────────────────────────────────┐
+        │         PHASE 3: PARSE TREE CONSTRUCTION        │
+        │         (embedded in parser_standalone.y)       │
+        │                                                 │
+        │  Functions:                                     │
+        │    • createNode() - create internal nodes       │
+        │    • createLeaf() - create terminal nodes       │
+        │    • printTree() - display tree                 │
+        │    • saveTree() - save to file                  │
+        └─────────────────────────────────────────────────┘
+                                  |
+                    Parse Tree: FUNC → BLOCK → SEQ → ...
+                                  |
+                                  v
+        ┌─────────────────────────────────────────────────┐
+        │         PHASE 4: SEMANTIC ANALYSIS              │
+        │         (embedded in parser_standalone.y)       │
+        │                                                 │
+        │  Symbol Table Functions:                        │
+        │    • sym_init() - initialize                    │
+        │    • sym_lookup() - find variables              │
+        │    • sym_insert() - add variables               │
+        │    • sym_get_type() - type checking             │
+        │                                                 │
+        │  Checks:                                        │
+        │    • Undeclared variables                       │
+        │    • Duplicate declarations                     │
+        │    • Type mismatches                            │
+        └─────────────────────────────────────────────────┘
+                                  |
+                    Symbol Table: x=10, y=20, z=30
+                                  |
+                                  v
+        ┌─────────────────────────────────────────────────┐
+        │         PHASE 5: INTERMEDIATE CODE GEN          │
+        │         (embedded in parser_standalone.y)       │
+        │                                                 │
+        │  TAC Functions:                                 │
+        │    • tac_init() - initialize                    │
+        │    • tac_new_temp() - generate t0, t1, ...      │
+        │    • tac_emit() - emit instructions             │
+        │    • tac_print() - display TAC                  │
+        │                                                 │
+        │  Generates:                                     │
+        │    • Three-address code                         │
+        │    • Temporary variables                        │
+        │    • Linear instruction sequence                │
+        └─────────────────────────────────────────────────┘
+                                  |
+                    TAC: t0 = x + y, t1 = t0 * 2, ...
+                                  |
+                                  v
+        ┌─────────────────────────────────────────────────┐
+        │         PHASE 6: CODE OPTIMIZATION              │
+        │         (embedded in parser_standalone.y)       │
+        │                                                 │
+        │  Optimization Functions:                        │
+        │    • tac_print_optimised()                      │
+        │    • is_integer_literal()                       │
+        │                                                 │
+        │  Optimizations:                                 │
+        │    • Constant folding                           │
+        │    • Compile-time evaluation                    │
+        │    • Example: 3 + 4 → 7                         │
+        └─────────────────────────────────────────────────┘
+                                  |
+                    Optimized TAC: t0 = 7 (folded)
+                                  |
+                                  v
+                            OUTPUT FILES:
+                    • parsetree.txt (parse tree)
+                    • Console output (all phases)
+
+
+================================================================================
+                        FILE STRUCTURE
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────┐
+│  lexer.l                                                        │
+│  ────────                                                       │
+│  • Token patterns (regex)                                       │
+│  • Keyword recognition                                          │
+│  • Operator recognition                                         │
+│  • Literal recognition                                          │
+│  • Comment handling                                             │
+│  • Whitespace handling                                          │
+│                                                                 │
+│  Output: Token stream to parser                                 │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│  parser_standalone.y                                            │
+│  ────────────────────                                           │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────┐     │
+│  │  PROLOGUE SECTION (%{ ... %})                         │     │
+│  │  ─────────────────────────────                        │     │
+│  │                                                        │     │
+│  │  1. Symbol Table Implementation (lines 20-120)        │     │
+│  │     • Symbol struct definition                        │     │
+│  │     • sym_init(), sym_lookup(), sym_insert()          │     │
+│  │     • sym_set_int(), sym_set_float()                  │     │
+│  │     • sym_print(), sym_count(), sym_get()             │     │
+│  │                                                        │     │
+│  │  2. TAC Generator Implementation (lines 122-220)      │     │
+│  │     • TACInstr struct definition                      │     │
+│  │     • tac_init(), tac_new_temp()                      │     │
+│  │     • tac_emit(), tac_print()                         │     │
+│  │     • tac_print_optimised()                           │     │
+│  │     • is_integer_literal()                            │     │
+│  │                                                        │     │
+│  │  3. Parse Tree Implementation (lines 222-300)         │     │
+│  │     • Node struct definition                          │     │
+│  │     • createNode(), createLeaf()                      │     │
+│  │     • printTree(), saveTree()                         │     │
+│  │     • freeTree()                                      │     │
+│  │                                                        │     │
+│  │  4. Global Variables & Declarations                   │     │
+│  │     • debug_tokens, has_errors                        │     │
+│  │     • parse_tree_root                                 │     │
+│  │     • Function prototypes                             │     │
+│  └───────────────────────────────────────────────────────┘     │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────┐     │
+│  │  BISON DECLARATIONS                                   │     │
+│  │  ──────────────────                                   │     │
+│  │                                                        │     │
+│  │  • %union (semantic value types)                      │     │
+│  │  • %token (terminal symbols)                          │     │
+│  │  • %type (non-terminal types)                         │     │
+│  │  • %left, %right (precedence)                         │     │
+│  └───────────────────────────────────────────────────────┘     │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────┐     │
+│  │  GRAMMAR RULES (lines 350-800)                        │     │
+│  │  ──────────────────────────                           │     │
+│  │                                                        │     │
+│  │  program → item_list                                  │     │
+│  │  item_list → item | item_list item                    │     │
+│  │  item → statement | function_def                      │     │
+│  │  statement → declaration | assignment | ...           │     │
+│  │  expression → term | expression + term | ...          │     │
+│  │                                                        │     │
+│  │  Each rule has semantic actions { ... } that:         │     │
+│  │    • Build parse tree nodes                           │     │
+│  │    • Check semantics (symbol table)                   │     │
+│  │    • Generate TAC                                     │     │
+│  └───────────────────────────────────────────────────────┘     │
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────┐     │
+│  │  EPILOGUE SECTION (after %%)                          │     │
+│  │  ────────────────────────                             │     │
+│  │                                                        │     │
+│  │  • sem_error() - semantic error reporting             │     │
+│  │  • yyerror() - syntax error reporting                 │     │
+│  └───────────────────────────────────────────────────────┘     │
+│                                                                 │
+│  Output: Parse tree, symbol table, TAC                         │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│  main_standalone.c                                              │
+│  ──────────────────                                             │
+│  • main() function                                              │
+│  • Opens input file                                             │
+│  • Calls sym_init(), tac_init()                                 │
+│  • Calls yyparse() ← THE PARSER                                 │
+│  • Prints all outputs                                           │
+│  • Cleanup and exit                                             │
+│                                                                 │
+│  NO COMPILER LOGIC - JUST ORCHESTRATION!                        │
+└─────────────────────────────────────────────────────────────────┘
+
+
+================================================================================
+                        DATA FLOW
+================================================================================
+
+Input File (test.rs)
+        ↓
+    [Lexer reads characters]
+        ↓
+    Token Stream
+        ↓
+    [Parser consumes tokens]
+        ↓
+    ┌─────────────────────────────────┐
+    │  During Parsing (SDT):          │
+    │  • Build parse tree             │
+    │  • Update symbol table          │
+    │  • Generate TAC                 │
+    └─────────────────────────────────┘
+        ↓
+    ┌─────────────────────────────────┐
+    │  After Parsing:                 │
+    │  • Print parse tree             │
+    │  • Print symbol table           │
+    │  • Print TAC                    │
+    │  • Print optimized TAC          │
+    └─────────────────────────────────┘
+        ↓
+    Output (console + files)
+
+
+================================================================================
+                    KEY DESIGN DECISIONS
+================================================================================
+
+1. SINGLE-PASS COMPILATION
+   • All phases happen during parsing
+   • Syntax-Directed Translation (SDT)
+   • Efficient: O(n) time complexity
+
+2. EMBEDDED HELPERS
+   • All code in parser_standalone.y
+   • No external .c/.h files
+   • Meets "lex and bison only" requirement
+
+3. SIMPLE DATA STRUCTURES
+   • Fixed-size arrays (not dynamic)
+   • Linear search (adequate for small programs)
+   • Easy to understand and debug
+
+4. CLEAR SEPARATION
+   • Lexer: tokenization only
+   • Parser: everything else
+   • Main: orchestration only
+
+5. COMPREHENSIVE OUTPUT
+   • Shows all compilation phases
+   • Educational value
+   • Easy to verify correctness
+
+
+================================================================================
+                        END OF ARCHITECTURE
+================================================================================

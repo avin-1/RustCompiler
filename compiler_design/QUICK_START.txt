@@ -1,0 +1,141 @@
+================================================================================
+  MINI RUST COMPILER - QUICK START GUIDE
+  LEX AND BISON ONLY - Course Project
+================================================================================
+
+WHAT YOU HAVE:
+--------------
+✓ lexer.l                    - Lexer (tokenization)
+✓ parser_standalone.y        - Parser + ALL helpers embedded
+✓ main_standalone.c          - Minimal driver
+✓ build_standalone.bat       - Build script
+✓ test.rs                    - Sample input file
+
+ALL COMPILER LOGIC IS IN .l AND .y FILES!
+
+================================================================================
+HOW TO BUILD:
+================================================================================
+
+1. Open Command Prompt in this folder
+2. Run: build_standalone.bat
+3. Done! You'll get: compiler_standalone.exe
+
+================================================================================
+HOW TO RUN:
+================================================================================
+
+Compile a file:
+  compiler_standalone.exe test.rs
+
+Or use stdin:
+  compiler_standalone.exe < input.rs
+
+================================================================================
+WHAT IT DOES:
+================================================================================
+
+Phase 1: LEXICAL ANALYSIS
+  - Tokenizes input using Flex DFA
+  - Shows: [KW: let] [ID: x] [OP: =] [INT: 10] ...
+
+Phase 2: SYNTAX ANALYSIS  
+  - Parses using Bison LALR(1)
+  - Shows: Success or error messages
+
+Phase 3: PARSE TREE
+  - Hierarchical syntax tree
+  - Shows program structure
+
+Phase 4: SYMBOL TABLE
+  - All variables with types and values
+  - Shows: x=10, y=20, etc.
+
+Phase 5: INTERMEDIATE CODE (TAC)
+  - Three-address code
+  - Shows: t0 = x + y
+
+Phase 6: OPTIMIZATION
+  - Constant folding
+  - Shows: t0 = 30 (folded from 10 + 20)
+
+================================================================================
+SAMPLE INPUT (test.rs):
+================================================================================
+
+fn main() {
+    let x: i32 = 10;
+    let y: i32 = 20;
+    let z = x + y * 2;
+    
+    if z > 40 {
+        println!("Large value");
+    }
+}
+
+================================================================================
+FOR YOUR PROFESSOR:
+================================================================================
+
+To prove "lex and bison only" requirement:
+
+1. Open parser_standalone.y
+   → See symbol table code (lines 20-120)
+   → See TAC generator code (lines 122-220)
+   → See parse tree code (lines 222-300)
+   → All embedded in the .y file!
+
+2. Open main_standalone.c
+   → Only calls yyparse() and prints output
+   → NO compiler logic here!
+
+3. Build and run
+   → Only needs lexer.l and parser_standalone.y
+   → No external .c/.h helper files!
+
+================================================================================
+TROUBLESHOOTING:
+================================================================================
+
+Error: "win_flex not found"
+  → Install Flex for Windows
+
+Error: "win_bison not found"
+  → Install Bison for Windows
+
+Error: "gcc not found"
+  → Install MinGW or GCC for Windows
+
+================================================================================
+FILES EXPLAINED:
+================================================================================
+
+lexer.l                  - Flex lexer specification
+                          Contains: token patterns, regex rules
+
+parser_standalone.y      - Bison parser specification
+                          Contains: grammar rules, semantic actions,
+                                   symbol table, TAC generator, parse tree
+                                   (ALL COMPILER LOGIC HERE!)
+
+main_standalone.c        - Driver program
+                          Contains: main() that calls yyparse()
+                                   (NO COMPILER LOGIC!)
+
+build_standalone.bat     - Build automation
+                          Runs: flex → bison → gcc
+
+test.rs                  - Sample Rust program to compile
+test_errors.rs           - Error test cases
+
+parsetree.txt            - Generated parse tree output
+parsetree.dot            - DOT format (for visualization)
+
+================================================================================
+NEED MORE INFO?
+================================================================================
+
+Read: README.md              - Full documentation
+Read: README_STANDALONE.md   - Detailed technical info
+
+================================================================================

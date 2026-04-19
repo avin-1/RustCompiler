@@ -1,0 +1,260 @@
+================================================================================
+                        FILE INDEX
+        Mini Rust Compiler - Lex and Bison Only
+================================================================================
+
+📁 PROJECT FILES
+================================================================================
+
+SOURCE FILES (Required for compilation):
+────────────────────────────────────────
+✓ lexer.l                    - Flex lexer specification
+                              Contains: Token patterns, regex rules
+                              Lines: ~200
+                              
+✓ parser_standalone.y        - Bison parser with ALL helpers embedded
+                              Contains: Grammar rules, symbol table,
+                                       TAC generator, parse tree, 
+                                       semantic actions
+                              Lines: ~900
+                              THIS IS WHERE ALL COMPILER LOGIC IS!
+                              
+✓ main_standalone.c          - Minimal driver program
+                              Contains: main() that calls yyparse()
+                              Lines: ~100
+                              NO COMPILER LOGIC - JUST ORCHESTRATION
+
+
+BUILD FILES:
+────────────
+✓ build_standalone.bat       - Windows build script
+                              Runs: flex → bison → gcc
+                              Creates: compiler_standalone.exe
+
+
+GENERATED FILES (Created during build):
+────────────────────────────────────────
+• parser_standalone.tab.c    - Generated parser implementation
+• parser_standalone.tab.h    - Generated token definitions
+• lex.yy.c                   - Generated lexer implementation
+                              (deleted after each build, regenerated)
+
+
+EXECUTABLE:
+───────────
+✓ compiler_standalone.exe    - Compiled compiler executable
+                              Usage: compiler_standalone.exe test.rs
+
+
+TEST FILES:
+───────────
+✓ test.rs                    - Sample Rust program (valid)
+                              Contains: variables, arithmetic, if/else,
+                                       while loops, functions
+                              
+✓ test_errors.rs             - Error test cases
+                              Contains: undeclared vars, type errors,
+                                       duplicate declarations
+
+
+OUTPUT FILES (Generated when running compiler):
+────────────────────────────────────────────────
+• parsetree.txt              - Parse tree output (text format)
+• parsetree.dot              - Parse tree in DOT format (for graphviz)
+
+
+================================================================================
+
+📚 DOCUMENTATION FILES
+================================================================================
+
+MAIN DOCUMENTATION:
+───────────────────
+✓ README.md                  - Main project documentation
+                              Read this first!
+                              Contains: Overview, quick start, features,
+                                       examples, theory covered
+                              
+✓ README_STANDALONE.md       - Detailed technical documentation
+                              Contains: Implementation details, code
+                                       organization, compliance proof
+
+
+QUICK REFERENCE:
+────────────────
+✓ QUICK_START.txt            - Quick start guide
+                              Contains: Build instructions, run commands,
+                                       troubleshooting, sample output
+                              
+✓ PROJECT_SUMMARY.txt        - Project summary for submission
+                              Contains: Compliance verification, statistics,
+                                       implementation details, checklist
+
+
+TECHNICAL DOCUMENTATION:
+────────────────────────
+✓ ARCHITECTURE.txt           - Architecture diagram and design
+                              Contains: Phase diagrams, file structure,
+                                       data flow, design decisions
+                              
+✓ FILE_INDEX.txt             - This file
+                              Contains: Complete file listing with
+                                       descriptions
+
+
+================================================================================
+
+📊 FILE CATEGORIES
+================================================================================
+
+ESSENTIAL (Must have):
+  • lexer.l
+  • parser_standalone.y
+  • main_standalone.c
+  • build_standalone.bat
+  • test.rs
+
+DOCUMENTATION (Recommended):
+  • README.md
+  • QUICK_START.txt
+  • PROJECT_SUMMARY.txt
+
+GENERATED (Auto-created):
+  • compiler_standalone.exe
+  • parser_standalone.tab.c
+  • parser_standalone.tab.h
+  • parsetree.txt
+
+OPTIONAL (Nice to have):
+  • README_STANDALONE.md
+  • ARCHITECTURE.txt
+  • FILE_INDEX.txt
+  • test_errors.rs
+  • parsetree.dot
+
+
+================================================================================
+
+🎯 WHAT TO SHOW YOUR PROFESSOR
+================================================================================
+
+1. SOURCE CODE:
+   → Open: parser_standalone.y
+   → Show: Lines 20-300 (all helper code embedded)
+   → Prove: All compiler logic is in the .y file
+
+2. DRIVER CODE:
+   → Open: main_standalone.c
+   → Show: Only calls yyparse() and prints output
+   → Prove: No compiler logic in main
+
+3. BUILD PROCESS:
+   → Run: build_standalone.bat
+   → Show: Only needs lexer.l and parser_standalone.y
+   → Prove: No external helper files needed
+
+4. EXECUTION:
+   → Run: compiler_standalone.exe test.rs
+   → Show: All 6 phases working correctly
+   → Prove: Complete compiler implementation
+
+5. DOCUMENTATION:
+   → Read: PROJECT_SUMMARY.txt
+   → Show: Compliance verification section
+   → Prove: Meets "lex and bison only" requirement
+
+
+================================================================================
+
+📖 READING ORDER (Recommended)
+================================================================================
+
+For Students:
+  1. QUICK_START.txt         - Get started quickly
+  2. README.md               - Understand the project
+  3. test.rs                 - See example input
+  4. Run the compiler        - See it in action
+  5. lexer.l                 - Study lexer
+  6. parser_standalone.y     - Study parser
+  7. ARCHITECTURE.txt        - Understand design
+
+For Professors:
+  1. PROJECT_SUMMARY.txt     - Verify compliance
+  2. parser_standalone.y     - Review implementation
+  3. main_standalone.c       - Verify it's just a driver
+  4. Run the compiler        - Test functionality
+  5. README_STANDALONE.md    - Technical details
+
+
+================================================================================
+
+🔍 FILE SIZES (Approximate)
+================================================================================
+
+lexer.l                    ~8 KB   (200 lines)
+parser_standalone.y        ~35 KB  (900 lines)
+main_standalone.c          ~4 KB   (100 lines)
+build_standalone.bat       ~1 KB
+test.rs                    ~1 KB
+test_errors.rs             ~1 KB
+
+README.md                  ~8 KB
+README_STANDALONE.md       ~12 KB
+QUICK_START.txt            ~5 KB
+PROJECT_SUMMARY.txt        ~10 KB
+ARCHITECTURE.txt           ~12 KB
+FILE_INDEX.txt             ~6 KB
+
+compiler_standalone.exe    ~200 KB (compiled)
+parser_standalone.tab.c    ~150 KB (generated)
+
+
+================================================================================
+
+✅ SUBMISSION CHECKLIST
+================================================================================
+
+Required Files:
+  ☑ lexer.l
+  ☑ parser_standalone.y
+  ☑ main_standalone.c
+  ☑ build_standalone.bat
+  ☑ test.rs
+  ☑ README.md
+
+Recommended Files:
+  ☑ QUICK_START.txt
+  ☑ PROJECT_SUMMARY.txt
+  ☑ test_errors.rs
+
+Optional Files:
+  ☑ README_STANDALONE.md
+  ☑ ARCHITECTURE.txt
+  ☑ FILE_INDEX.txt
+
+Generated Files (Include if requested):
+  ☑ compiler_standalone.exe
+  ☑ parsetree.txt
+
+
+================================================================================
+
+🚀 QUICK COMMANDS
+================================================================================
+
+Build:
+  > build_standalone.bat
+
+Run:
+  > compiler_standalone.exe test.rs
+
+Test errors:
+  > compiler_standalone.exe test_errors.rs
+
+Clean (delete generated files):
+  > del *.tab.c *.tab.h lex.yy.c parsetree.txt parsetree.dot
+
+
+================================================================================
+                        END OF FILE INDEX
+================================================================================
