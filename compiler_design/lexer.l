@@ -65,11 +65,23 @@ FLOAT       {DIGIT}+"."{DIGIT}+
 "else"      { DBG_TOKEN("[KW: else]  ");    return ELSE;    }
 "while"     { DBG_TOKEN("[KW: while]  ");   return WHILE;   }
 "return"    { DBG_TOKEN("[KW: return]  ");  return RETURN;  }
-"i32"       { DBG_TOKEN("[KW: i32]  ");     return TYPE_I32;}
-"f64"       { DBG_TOKEN("[KW: f64]  ");     return TYPE_F64;}
+
+"i8"        { DBG_TOKEN("[KW: i8]  ");      return TYPE_I8;  }
+"i16"       { DBG_TOKEN("[KW: i16]  ");     return TYPE_I16; }
+"i32"       { DBG_TOKEN("[KW: i32]  ");     return TYPE_I32; }
+"i64"       { DBG_TOKEN("[KW: i64]  ");     return TYPE_I64; }
+"i128"      { DBG_TOKEN("[KW: i128]  ");    return TYPE_I128;}
+"u8"        { DBG_TOKEN("[KW: u8]  ");      return TYPE_U8;  }
+"u16"       { DBG_TOKEN("[KW: u16]  ");     return TYPE_U16; }
+"u32"       { DBG_TOKEN("[KW: u32]  ");     return TYPE_U32; }
+"u64"       { DBG_TOKEN("[KW: u64]  ");     return TYPE_U64; }
+"u128"      { DBG_TOKEN("[KW: u128]  ");    return TYPE_U128;}
+"f32"       { DBG_TOKEN("[KW: f32]  ");     return TYPE_F32; }
+"f64"       { DBG_TOKEN("[KW: f64]  ");     return TYPE_F64; }
 "bool"      { DBG_TOKEN("[KW: bool]  ");    return TYPE_BOOL;}
-"true"      { DBG_TOKEN("[KW: true]  ");    yylval.ival = 1; return INT_LIT; }
-"false"     { DBG_TOKEN("[KW: false]  ");   yylval.ival = 0; return INT_LIT; }
+
+"true"      { DBG_TOKEN("[KW: true]  ");    return TRUE_LIT; }
+"false"     { DBG_TOKEN("[KW: false]  ");   return FALSE_LIT; }
 "println!"  { DBG_TOKEN("[KW: println!]  "); return PRINTLN; }
 
  /* ============================================================= */

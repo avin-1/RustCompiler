@@ -1,0 +1,358 @@
+=============================================================
+       MINI RUST COMPILER  (Flex + Bison STANDALONE)         
+       ALL CODE IN .l AND .y FILES ONLY!                     
+=============================================================
+
+Reading from file: test_complex.rs
+
+=============================================================
+  PHASE 1: LEXICAL ANALYSIS  (Token Stream)                  
+=============================================================
+[KW: fn]  [ID: main]  [DL: (]  [DL: )]  [DL: {]  [KW: let]  [ID: x]  [DL: :]  [KW: i32]  [OP: =]  [INT: 10]  [DL: ;]  [Parser] Declared 'x' with explicit type.
+[KW: let]  [ID: y]  [DL: :]  [KW: i32]  [OP: =]  [INT: 20]  [DL: ;]  [Parser] Declared 'y' with explicit type.
+[KW: let]  [KW: mut]  [ID: z]  [DL: :]  [KW: i32]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'z' with type.
+[ID: z]  [OP: =]  [ID: x]  [OP: +]  [ID: y]  [OP: *]  [INT: 2]  [DL: ;]  [Parser] Assignment to 'z'.
+[KW: let]  [ID: a]  [DL: :]  [KW: i32]  [OP: =]  [ID: z]  [OP: -]  [ID: x]  [OP: /]  [INT: 2]  [DL: ;]  [Parser] Declared 'a' with explicit type.
+[KW: let]  [ID: b]  [DL: :]  [KW: i32]  [OP: =]  [ID: a]  [OP: *]  [INT: 3]  [OP: +]  [ID: y]  [DL: ;]  [Parser] Declared 'b' with explicit type.
+[KW: if]  [ID: b]  [OP: >]  [INT: 50]  [DL: {]  [KW: let]  [ID: c]  [DL: :]  [KW: i32]  [OP: =]  [ID: b]  [OP: -]  [INT: 10]  [DL: ;]  [Parser] Declared 'c' with explicit type.
+[ID: z]  [OP: =]  [ID: c]  [OP: +]  [ID: x]  [DL: ;]  [Parser] Assignment to 'z'.
+[DL: }]  [KW: else]  [DL: {]  [ID: z]  [OP: =]  [ID: b]  [OP: +]  [ID: y]  [DL: ;]  [Parser] Assignment to 'z'.
+[DL: }]  [Parser] If-else statement.
+[KW: let]  [KW: mut]  [ID: counter]  [DL: :]  [KW: i32]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'counter' with type.
+[KW: while]  [ID: counter]  [OP: <]  [INT: 5]  [DL: {]  [KW: let]  [ID: temp]  [DL: :]  [KW: i32]  [OP: =]  [ID: counter]  [OP: *]  [INT: 2]  [DL: ;]  [Parser] Declared 'temp' with explicit type.
+[ID: counter]  [OP: =]  [ID: counter]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'counter'.
+[DL: }]  [Parser] While loop.
+[KW: let]  [ID: result]  [DL: :]  [KW: i32]  [OP: =]  [DL: (]  [ID: x]  [OP: +]  [ID: y]  [DL: )]  [OP: *]  [DL: (]  [ID: z]  [OP: -]  [ID: a]  [DL: )]  [OP: /]  [INT: 2]  [DL: ;]  [Parser] Declared 'result' with explicit type.
+[KW: let]  [ID: final_value]  [DL: :]  [KW: i32]  [OP: =]  [ID: result]  [OP: +]  [ID: counter]  [OP: -]  [ID: b]  [DL: ;]  [Parser] Declared 'final_value' with explicit type.
+[DL: }]  [Parser] Function 'main' defined.
+[KW: fn]  [ID: calculate]  [DL: (]  [ID: n]  [DL: :]  [KW: i32]  [Parser] Parameter 'n' declared.
+[DL: )]  [OP: ->]  [KW: i32]  [DL: {]  [KW: let]  [KW: mut]  [ID: sum]  [DL: :]  [KW: i32]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'sum' with type.
+[KW: let]  [KW: mut]  [ID: i]  [DL: :]  [KW: i32]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'i' with type.
+[KW: while]  [ID: i]  [OP: <]  [ID: n]  [DL: {]  [ID: sum]  [OP: =]  [ID: sum]  [OP: +]  [ID: i]  [DL: ;]  [Parser] Assignment to 'sum'.
+[ID: i]  [OP: =]  [ID: i]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'i'.
+[DL: }]  [Parser] While loop.
+[KW: return]  [ID: sum]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] Function 'calculate' defined with parameters.
+[KW: fn]  [ID: factorial]  [DL: (]  [ID: num]  [DL: :]  [KW: i32]  [Parser] Parameter 'num' declared.
+[DL: )]  [OP: ->]  [KW: i32]  [DL: {]  [KW: if]  [ID: num]  [OP: ==]  [INT: 0]  [DL: {]  [KW: return]  [INT: 1]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [KW: else]  [DL: {]  [KW: let]  [ID: prev]  [DL: :]  [KW: i32]  [OP: =]  [ID: num]  [OP: -]  [INT: 1]  [DL: ;]  [Parser] Declared 'prev' with explicit type.
+[KW: let]  [ID: fact_result]  [DL: :]  [KW: i32]  [OP: =]  [ID: factorial]  [DL: (]  [ID: prev]  [DL: )]  [Parser] Function call 'factorial(...)'
+[DL: ;]  [Parser] Declared 'fact_result' with explicit type.
+[KW: return]  [ID: num]  [OP: *]  [ID: fact_result]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] If-else statement.
+[DL: }]  [Parser] Function 'factorial' defined with parameters.
+[Parser] program → item_list reached; parse_tree_root set.
+
+=============================================================
+
+=============================================================
+  PHASE 2: SYNTAX ANALYSIS  (Parsing Result)                 
+=============================================================
+  >>> Parsing completed SUCCESSFULLY. No errors.
+=============================================================
+
+=============================================================
+  PHASE 3: PARSE TREE                                        
+=============================================================
+  SEQ
+    SEQ
+      FUNC
+        main
+        BLOCK
+          SEQ
+            SEQ
+              SEQ
+                SEQ
+                  SEQ
+                    SEQ
+                      SEQ
+                        SEQ
+                          SEQ
+                            SEQ
+                              LET
+                                x
+                                10
+                              LET
+                                y
+                                20
+                            LET_MUT
+                              z
+                              0
+                          ASSIGN
+                            z
+                            +
+                              x
+                              *
+                                y
+                                2
+                        LET
+                          a
+                          -
+                            z
+                            /
+                              x
+                              2
+                      LET
+                        b
+                        +
+                          *
+                            a
+                            3
+                          y
+                    IF_ELSE
+                      >
+                        b
+                        50
+                      BRANCHES
+                        BLOCK
+                          SEQ
+                            LET
+                              c
+                              -
+                                b
+                                10
+                            ASSIGN
+                              z
+                              +
+                                c
+                                x
+                        BLOCK
+                          ASSIGN
+                            z
+                            +
+                              b
+                              y
+                  LET_MUT
+                    counter
+                    0
+                WHILE
+                  <
+                    counter
+                    5
+                  BLOCK
+                    SEQ
+                      LET
+                        temp
+                        *
+                          counter
+                          2
+                      ASSIGN
+                        counter
+                        +
+                          counter
+                          1
+              LET
+                result
+                /
+                  *
+                    +
+                      x
+                      y
+                    -
+                      z
+                      a
+                  2
+            LET
+              final_value
+              -
+                +
+                  result
+                  counter
+                b
+      FUNC
+        FUNC_PARAMS
+          calculate
+          PARAM
+            n
+        BLOCK
+          SEQ
+            SEQ
+              SEQ
+                LET_MUT
+                  sum
+                  0
+                LET_MUT
+                  i
+                  0
+              WHILE
+                <
+                  i
+                  n
+                BLOCK
+                  SEQ
+                    ASSIGN
+                      sum
+                      +
+                        sum
+                        i
+                    ASSIGN
+                      i
+                      +
+                        i
+                        1
+            RETURN
+              sum
+    FUNC
+      FUNC_PARAMS
+        factorial
+        PARAM
+          num
+      BLOCK
+        IF_ELSE
+          ==
+            num
+            0
+          BRANCHES
+            BLOCK
+              RETURN
+                1
+            BLOCK
+              SEQ
+                SEQ
+                  LET
+                    prev
+                    -
+                      num
+                      1
+                  LET
+                    fact_result
+                    CALL
+                      factorial
+                      prev
+                RETURN
+                  *
+                    num
+                    fact_result
+=============================================================
+
+=============================================================
+  PHASE 4: SYMBOL TABLE  (Semantic Analysis)                 
+=============================================================
+
+=============================================================
+                      SYMBOL  TABLE                          
+=============================================================
+Idx  Name             Type       Defined?   Scope      Value     
+-------------------------------------------------------------
+0    x                i32        yes        exited     10
+1    y                i32        yes        exited     20
+2    z                i32        yes        exited     0
+3    a                i32        yes        exited     -5
+4    b                i32        yes        exited     5
+5    c                i32        yes        exited     -5
+6    counter          i32        yes        exited     0
+7    temp             i32        yes        exited     0
+8    result           i32        yes        exited     75
+9    final_value      i32        yes        exited     70
+10   n                i32        no         exited     -
+11   sum              i32        yes        exited     0
+12   i                i32        yes        exited     0
+13   num              i32        no         exited     -
+14   prev             i32        no         exited     -
+15   fact_result      i32        no         exited     -
+=============================================================
+
+
+=============================================================
+          INTERMEDIATE CODE  (Three-Address Code)            
+=============================================================
+  x = 10
+  y = 20
+  z = 0
+  t0 = 20 * 2
+  t1 = 10 + 40
+  z = t1
+  t2 = 10 / 2
+  t3 = 0 - 5
+  a = t3
+  t4 = -5 * 3
+  t5 = -15 + 20
+  b = t5
+  t6 = b > 50
+  t7 = 5 - 10
+  c = t7
+  t8 = -5 + 10
+  z = t8
+  t9 = 5 + 20
+  z = t9
+  counter = 0
+  t10 = counter < 5
+  t11 = 0 * 2
+  temp = t11
+  t12 = 0 + 1
+  counter = t12
+  t13 = 10 + 20
+  t14 = 0 - -5
+  t15 = 30 * 5
+  t16 = 150 / 2
+  result = t16
+  t17 = 75 + 0
+  t18 = 75 - 5
+  final_value = t18
+  sum = 0
+  i = 0
+  t19 = i < n
+  t20 = 0 + 0
+  sum = t20
+  t21 = 0 + 1
+  i = t21
+  t22 = num == 0
+  t23 = num - 1
+  prev = t23
+  t24 = call factorial
+  fact_result = t24
+  t25 = num * fact_result
+=============================================================
+
+
+=============================================================
+     OPTIMISED CODE  (after constant folding)                
+=============================================================
+  x = 10
+  y = 20
+  z = 0
+  t0 = 40    ; folded from: 20 * 2
+  t1 = 50    ; folded from: 10 + 40
+  z = t1
+  t2 = 5    ; folded from: 10 / 2
+  t3 = -5    ; folded from: 0 - 5
+  a = t3
+  t4 = -15    ; folded from: -5 * 3
+  t5 = 5    ; folded from: -15 + 20
+  b = t5
+  t6 = b > 50
+  t7 = -5    ; folded from: 5 - 10
+  c = t7
+  t8 = 5    ; folded from: -5 + 10
+  z = t8
+  t9 = 25    ; folded from: 5 + 20
+  z = t9
+  counter = 0
+  t10 = counter < 5
+  t11 = 0    ; folded from: 0 * 2
+  temp = t11
+  t12 = 1    ; folded from: 0 + 1
+  counter = t12
+  t13 = 30    ; folded from: 10 + 20
+  t14 = 5    ; folded from: 0 - -5
+  t15 = 150    ; folded from: 30 * 5
+  t16 = 75    ; folded from: 150 / 2
+  result = t16
+  t17 = 75    ; folded from: 75 + 0
+  t18 = 70    ; folded from: 75 - 5
+  final_value = t18
+  sum = 0
+  i = 0
+  t19 = i < n
+  t20 = 0    ; folded from: 0 + 0
+  sum = t20
+  t21 = 1    ; folded from: 0 + 1
+  i = t21
+  t22 = num == 0
+  t23 = num - 1
+  prev = t23
+  t24 = call factorial
+  fact_result = t24
+  t25 = num * fact_result
+=============================================================
+

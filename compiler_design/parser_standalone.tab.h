@@ -61,20 +61,32 @@ extern int yydebug;
     ELSE = 262,                    /* ELSE  */
     WHILE = 263,                   /* WHILE  */
     RETURN = 264,                  /* RETURN  */
-    TYPE_I32 = 265,                /* TYPE_I32  */
-    TYPE_F64 = 266,                /* TYPE_F64  */
-    TYPE_BOOL = 267,               /* TYPE_BOOL  */
-    PRINTLN = 268,                 /* PRINTLN  */
-    INT_LIT = 269,                 /* INT_LIT  */
-    FLOAT_LIT = 270,               /* FLOAT_LIT  */
-    STRING_LIT = 271,              /* STRING_LIT  */
-    IDENTIFIER = 272,              /* IDENTIFIER  */
-    EQ = 273,                      /* EQ  */
-    NEQ = 274,                     /* NEQ  */
-    LEQ = 275,                     /* LEQ  */
-    GEQ = 276,                     /* GEQ  */
-    ARROW = 277,                   /* ARROW  */
-    UMINUS = 278                   /* UMINUS  */
+    TYPE_I8 = 265,                 /* TYPE_I8  */
+    TYPE_I16 = 266,                /* TYPE_I16  */
+    TYPE_I32 = 267,                /* TYPE_I32  */
+    TYPE_I64 = 268,                /* TYPE_I64  */
+    TYPE_I128 = 269,               /* TYPE_I128  */
+    TYPE_U8 = 270,                 /* TYPE_U8  */
+    TYPE_U16 = 271,                /* TYPE_U16  */
+    TYPE_U32 = 272,                /* TYPE_U32  */
+    TYPE_U64 = 273,                /* TYPE_U64  */
+    TYPE_U128 = 274,               /* TYPE_U128  */
+    TYPE_F32 = 275,                /* TYPE_F32  */
+    TYPE_F64 = 276,                /* TYPE_F64  */
+    TYPE_BOOL = 277,               /* TYPE_BOOL  */
+    PRINTLN = 278,                 /* PRINTLN  */
+    INT_LIT = 279,                 /* INT_LIT  */
+    FLOAT_LIT = 280,               /* FLOAT_LIT  */
+    STRING_LIT = 281,              /* STRING_LIT  */
+    IDENTIFIER = 282,              /* IDENTIFIER  */
+    TRUE_LIT = 283,                /* TRUE_LIT  */
+    FALSE_LIT = 284,               /* FALSE_LIT  */
+    EQ = 285,                      /* EQ  */
+    NEQ = 286,                     /* NEQ  */
+    LEQ = 287,                     /* LEQ  */
+    GEQ = 288,                     /* GEQ  */
+    ARROW = 289,                   /* ARROW  */
+    UMINUS = 290                   /* UMINUS  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -83,7 +95,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 327 "parser_standalone.y"
+#line 422 "parser_standalone.y"
 
     int    ival;
     double fval;
@@ -98,7 +110,7 @@ union YYSTYPE
         struct Node *node;
     } expr;
 
-#line 102 "parser_standalone.tab.h"
+#line 114 "parser_standalone.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

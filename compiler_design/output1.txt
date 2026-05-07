@@ -1,0 +1,884 @@
+=============================================================
+       MINI RUST COMPILER  (Flex + Bison STANDALONE)         
+       ALL CODE IN .l AND .y FILES ONLY!                     
+=============================================================
+
+Reading from file: test_all_types.rs
+
+=============================================================
+  PHASE 1: LEXICAL ANALYSIS  (Token Stream)                  
+=============================================================
+[KW: fn]  [ID: main]  [DL: (]  [DL: )]  [DL: {]  [KW: let]  [ID: a]  [DL: :]  [KW: i8]  [OP: =]  [INT: 10]  [DL: ;]  [Parser] Declared 'a' with explicit type.
+[KW: let]  [ID: b]  [DL: :]  [KW: i16]  [OP: =]  [INT: 100]  [DL: ;]  [Parser] Declared 'b' with explicit type.
+[KW: let]  [ID: c]  [DL: :]  [KW: i32]  [OP: =]  [INT: 1000]  [DL: ;]  [Parser] Declared 'c' with explicit type.
+[KW: let]  [ID: d]  [DL: :]  [KW: i64]  [OP: =]  [INT: 10000]  [DL: ;]  [Parser] Declared 'd' with explicit type.
+[KW: let]  [ID: e]  [DL: :]  [KW: i128]  [OP: =]  [INT: 100000]  [DL: ;]  [Parser] Declared 'e' with explicit type.
+[KW: let]  [ID: f]  [DL: :]  [KW: u8]  [OP: =]  [INT: 5]  [DL: ;]  [Parser] Declared 'f' with explicit type.
+[KW: let]  [ID: g]  [DL: :]  [KW: u16]  [OP: =]  [INT: 50]  [DL: ;]  [Parser] Declared 'g' with explicit type.
+[KW: let]  [ID: h]  [DL: :]  [KW: u32]  [OP: =]  [INT: 500]  [DL: ;]  [Parser] Declared 'h' with explicit type.
+[KW: let]  [ID: i]  [DL: :]  [KW: u64]  [OP: =]  [INT: 5000]  [DL: ;]  [Parser] Declared 'i' with explicit type.
+[KW: let]  [ID: j]  [DL: :]  [KW: u128]  [OP: =]  [INT: 50000]  [DL: ;]  [Parser] Declared 'j' with explicit type.
+[KW: let]  [ID: x]  [DL: :]  [KW: f32]  [OP: =]  [FLOAT: 3.14]  [DL: ;]  [Parser] Declared 'x' with explicit type.
+[KW: let]  [ID: y]  [DL: :]  [KW: f64]  [OP: =]  [FLOAT: 2.718]  [DL: ;]  [Parser] Declared 'y' with explicit type.
+[KW: let]  [ID: flag]  [DL: :]  [KW: bool]  [OP: =]  [KW: true]  [DL: ;]  [Parser] Declared 'flag' with explicit type.
+[KW: let]  [ID: check]  [DL: :]  [KW: bool]  [OP: =]  [KW: false]  [DL: ;]  [Parser] Declared 'check' with explicit type.
+[KW: let]  [ID: sum_int]  [DL: :]  [KW: i32]  [OP: =]  [ID: a]  [OP: +]  [ID: b]  [OP: +]  [ID: c]  [DL: ;]  [Parser] Declared 'sum_int' with explicit type.
+[KW: let]  [ID: sum_uint]  [DL: :]  [KW: u32]  [OP: =]  [ID: f]  [OP: +]  [ID: g]  [OP: +]  [ID: h]  [DL: ;]  [Parser] Declared 'sum_uint' with explicit type.
+[KW: let]  [ID: sum_float]  [DL: :]  [KW: f64]  [OP: =]  [ID: x]  [OP: +]  [ID: y]  [DL: ;]  [Parser] Declared 'sum_float' with explicit type.
+[KW: let]  [KW: mut]  [ID: counter]  [DL: :]  [KW: i64]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'counter' with type.
+[KW: while]  [ID: counter]  [OP: <]  [INT: 5]  [DL: {]  [ID: counter]  [OP: =]  [ID: counter]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'counter'.
+[DL: }]  [Parser] While loop.
+[KW: if]  [ID: sum_int]  [OP: >]  [INT: 100]  [DL: {]  [KW: let]  [ID: big]  [DL: :]  [KW: i32]  [OP: =]  [ID: sum_int]  [OP: *]  [INT: 2]  [DL: ;]  [Parser] Declared 'big' with explicit type.
+[DL: }]  [KW: let]  [Parser] If statement.
+[ID: result]  [DL: :]  [KW: i32]  [OP: =]  [ID: sum_int]  [OP: -]  [ID: sum_uint]  [DL: ;]  [Parser] Declared 'result' with explicit type.
+[DL: }]  [Parser] Function 'main' defined.
+[KW: fn]  [ID: calculate_i8]  [DL: (]  [ID: n]  [DL: :]  [KW: i8]  [Parser] Parameter 'n' declared.
+[DL: )]  [OP: ->]  [KW: i8]  [DL: {]  [KW: let]  [KW: mut]  [ID: sum]  [DL: :]  [KW: i8]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'sum' with type.
+[KW: let]  [KW: mut]  [ID: i]  [DL: :]  [KW: i8]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'i' with type.
+[KW: while]  [ID: i]  [OP: <]  [ID: n]  [DL: {]  [ID: sum]  [OP: =]  [ID: sum]  [OP: +]  [ID: i]  [DL: ;]  [Parser] Assignment to 'sum'.
+[ID: i]  [OP: =]  [ID: i]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'i'.
+[DL: }]  [Parser] While loop.
+[KW: return]  [ID: sum]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] Function 'calculate_i8' defined with parameters.
+[KW: fn]  [ID: calculate_i16]  [DL: (]  [ID: n]  [DL: :]  [KW: i16]  [Parser] Parameter 'n' declared.
+[DL: )]  [OP: ->]  [KW: i16]  [DL: {]  [KW: let]  [KW: mut]  [ID: sum]  [DL: :]  [KW: i16]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'sum' with type.
+[KW: let]  [KW: mut]  [ID: i]  [DL: :]  [KW: i16]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'i' with type.
+[KW: while]  [ID: i]  [OP: <]  [ID: n]  [DL: {]  [ID: sum]  [OP: =]  [ID: sum]  [OP: +]  [ID: i]  [DL: ;]  [Parser] Assignment to 'sum'.
+[ID: i]  [OP: =]  [ID: i]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'i'.
+[DL: }]  [Parser] While loop.
+[KW: return]  [ID: sum]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] Function 'calculate_i16' defined with parameters.
+[KW: fn]  [ID: calculate_i64]  [DL: (]  [ID: n]  [DL: :]  [KW: i64]  [Parser] Parameter 'n' declared.
+[DL: )]  [OP: ->]  [KW: i64]  [DL: {]  [KW: let]  [KW: mut]  [ID: sum]  [DL: :]  [KW: i64]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'sum' with type.
+[KW: let]  [KW: mut]  [ID: i]  [DL: :]  [KW: i64]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'i' with type.
+[KW: while]  [ID: i]  [OP: <]  [ID: n]  [DL: {]  [ID: sum]  [OP: =]  [ID: sum]  [OP: +]  [ID: i]  [DL: ;]  [Parser] Assignment to 'sum'.
+[ID: i]  [OP: =]  [ID: i]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'i'.
+[DL: }]  [Parser] While loop.
+[KW: return]  [ID: sum]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] Function 'calculate_i64' defined with parameters.
+[KW: fn]  [ID: calculate_u32]  [DL: (]  [ID: n]  [DL: :]  [KW: u32]  [Parser] Parameter 'n' declared.
+[DL: )]  [OP: ->]  [KW: u32]  [DL: {]  [KW: let]  [KW: mut]  [ID: sum]  [DL: :]  [KW: u32]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'sum' with type.
+[KW: let]  [KW: mut]  [ID: i]  [DL: :]  [KW: u32]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'i' with type.
+[KW: while]  [ID: i]  [OP: <]  [ID: n]  [DL: {]  [ID: sum]  [OP: =]  [ID: sum]  [OP: +]  [ID: i]  [DL: ;]  [Parser] Assignment to 'sum'.
+[ID: i]  [OP: =]  [ID: i]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'i'.
+[DL: }]  [Parser] While loop.
+[KW: return]  [ID: sum]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] Function 'calculate_u32' defined with parameters.
+[KW: fn]  [ID: calculate_u64]  [DL: (]  [ID: n]  [DL: :]  [KW: u64]  [Parser] Parameter 'n' declared.
+[DL: )]  [OP: ->]  [KW: u64]  [DL: {]  [KW: let]  [KW: mut]  [ID: sum]  [DL: :]  [KW: u64]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'sum' with type.
+[KW: let]  [KW: mut]  [ID: i]  [DL: :]  [KW: u64]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'i' with type.
+[KW: while]  [ID: i]  [OP: <]  [ID: n]  [DL: {]  [ID: sum]  [OP: =]  [ID: sum]  [OP: +]  [ID: i]  [DL: ;]  [Parser] Assignment to 'sum'.
+[ID: i]  [OP: =]  [ID: i]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'i'.
+[DL: }]  [Parser] While loop.
+[KW: return]  [ID: sum]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] Function 'calculate_u64' defined with parameters.
+[KW: fn]  [ID: calculate_f32]  [DL: (]  [ID: x]  [DL: :]  [KW: f32]  [Parser] Parameter 'x' declared.
+[DL: )]  [OP: ->]  [KW: f32]  [DL: {]  [KW: let]  [ID: result]  [DL: :]  [KW: f32]  [OP: =]  [ID: x]  [OP: *]  [FLOAT: 2.0]  [DL: ;]  [Parser] Declared 'result' with explicit type.
+[KW: return]  [ID: result]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] Function 'calculate_f32' defined with parameters.
+[KW: fn]  [ID: calculate_f64]  [DL: (]  [ID: x]  [DL: :]  [KW: f64]  [Parser] Parameter 'x' declared.
+[DL: )]  [OP: ->]  [KW: f64]  [DL: {]  [KW: let]  [ID: result]  [DL: :]  [KW: f64]  [OP: =]  [ID: x]  [OP: *]  [FLOAT: 3.0]  [DL: ;]  [Parser] Declared 'result' with explicit type.
+[KW: return]  [ID: result]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] Function 'calculate_f64' defined with parameters.
+[KW: fn]  [ID: test_bool]  [DL: (]  [ID: flag]  [DL: :]  [KW: bool]  [Parser] Parameter 'flag' declared.
+[DL: )]  [OP: ->]  [KW: bool]  [DL: {]  [KW: if]  [ID: flag]  [OP: ==]  [KW: true]  [DL: {]  [KW: return]  [KW: false]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [KW: else]  [DL: {]  [KW: return]  [KW: true]  [DL: ;]  [Parser] Return statement.
+[DL: }]  [Parser] If-else statement.
+[DL: }]  [Parser] Function 'test_bool' defined with parameters.
+[KW: fn]  [ID: mixed_types]  [DL: (]  [DL: )]  [DL: {]  [KW: let]  [ID: small]  [DL: :]  [KW: i8]  [OP: =]  [INT: 10]  [DL: ;]  [Parser] Declared 'small' with explicit type.
+[KW: let]  [ID: medium]  [DL: :]  [KW: i32]  [OP: =]  [INT: 100]  [DL: ;]  [Parser] Declared 'medium' with explicit type.
+[KW: let]  [ID: large]  [DL: :]  [KW: i64]  [OP: =]  [INT: 1000]  [DL: ;]  [Parser] Declared 'large' with explicit type.
+[KW: let]  [ID: huge]  [DL: :]  [KW: i128]  [OP: =]  [INT: 10000]  [DL: ;]  [Parser] Declared 'huge' with explicit type.
+[KW: let]  [ID: tiny]  [DL: :]  [KW: u8]  [OP: =]  [INT: 5]  [DL: ;]  [Parser] Declared 'tiny' with explicit type.
+[KW: let]  [ID: normal]  [DL: :]  [KW: u32]  [OP: =]  [INT: 50]  [DL: ;]  [Parser] Declared 'normal' with explicit type.
+[KW: let]  [ID: big]  [DL: :]  [KW: u64]  [OP: =]  [INT: 500]  [DL: ;]  [Parser] Declared 'big' with explicit type.
+[KW: let]  [ID: massive]  [DL: :]  [KW: u128]  [OP: =]  [INT: 5000]  [DL: ;]  [Parser] Declared 'massive' with explicit type.
+[KW: let]  [ID: pi]  [DL: :]  [KW: f32]  [OP: =]  [FLOAT: 3.14]  [DL: ;]  [Parser] Declared 'pi' with explicit type.
+[KW: let]  [ID: e]  [DL: :]  [KW: f64]  [OP: =]  [FLOAT: 2.718]  [DL: ;]  [Parser] Declared 'e' with explicit type.
+[KW: let]  [ID: yes]  [DL: :]  [KW: bool]  [OP: =]  [KW: true]  [DL: ;]  [Parser] Declared 'yes' with explicit type.
+[KW: let]  [ID: no]  [DL: :]  [KW: bool]  [OP: =]  [KW: false]  [DL: ;]  [Parser] Declared 'no' with explicit type.
+[KW: let]  [ID: calc1]  [DL: :]  [KW: i32]  [OP: =]  [ID: small]  [OP: +]  [ID: medium]  [DL: ;]  [Parser] Declared 'calc1' with explicit type.
+[KW: let]  [ID: calc2]  [DL: :]  [KW: i64]  [OP: =]  [ID: medium]  [OP: +]  [ID: large]  [DL: ;]  [Parser] Declared 'calc2' with explicit type.
+[KW: let]  [ID: calc3]  [DL: :]  [KW: u32]  [OP: =]  [ID: tiny]  [OP: +]  [ID: normal]  [DL: ;]  [Parser] Declared 'calc3' with explicit type.
+[KW: let]  [ID: calc4]  [DL: :]  [KW: u64]  [OP: =]  [ID: normal]  [OP: +]  [ID: big]  [DL: ;]  [Parser] Declared 'calc4' with explicit type.
+[KW: if]  [ID: calc1]  [OP: >]  [INT: 50]  [DL: {]  [KW: let]  [ID: temp]  [DL: :]  [KW: i32]  [OP: =]  [ID: calc1]  [OP: *]  [INT: 2]  [DL: ;]  [Parser] Declared 'temp' with explicit type.
+[DL: }]  [KW: else]  [DL: {]  [KW: let]  [ID: temp]  [DL: :]  [KW: i32]  [OP: =]  [ID: calc1]  [OP: +]  [INT: 10]  [DL: ;]  [Parser] Declared 'temp' with explicit type.
+[DL: }]  [Parser] If-else statement.
+[KW: let]  [KW: mut]  [ID: loop_i8]  [DL: :]  [KW: i8]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'loop_i8' with type.
+[KW: while]  [ID: loop_i8]  [OP: <]  [INT: 3]  [DL: {]  [ID: loop_i8]  [OP: =]  [ID: loop_i8]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'loop_i8'.
+[DL: }]  [Parser] While loop.
+[KW: let]  [KW: mut]  [ID: loop_u16]  [DL: :]  [KW: u16]  [OP: =]  [INT: 0]  [DL: ;]  [Parser] Declared mutable 'loop_u16' with type.
+[KW: while]  [ID: loop_u16]  [OP: <]  [INT: 5]  [DL: {]  [ID: loop_u16]  [OP: =]  [ID: loop_u16]  [OP: +]  [INT: 1]  [DL: ;]  [Parser] Assignment to 'loop_u16'.
+[DL: }]  [Parser] While loop.
+[KW: let]  [ID: final_result]  [DL: :]  [KW: i32]  [OP: =]  [ID: calc1]  [OP: +]  [ID: calc3]  [DL: ;]  [Parser] Declared 'final_result' with explicit type.
+[DL: }]  [Parser] Function 'mixed_types' defined.
+[Parser] program → item_list reached; parse_tree_root set.
+
+=============================================================
+
+=============================================================
+  PHASE 2: SYNTAX ANALYSIS  (Parsing Result)                 
+=============================================================
+  >>> Parsing completed SUCCESSFULLY. No errors.
+=============================================================
+
+=============================================================
+  PHASE 3: PARSE TREE                                        
+=============================================================
+  SEQ
+    SEQ
+      SEQ
+        SEQ
+          SEQ
+            SEQ
+              SEQ
+                SEQ
+                  SEQ
+                    FUNC
+                      main
+                      BLOCK
+                        SEQ
+                          SEQ
+                            SEQ
+                              SEQ
+                                SEQ
+                                  SEQ
+                                    SEQ
+                                      SEQ
+                                        SEQ
+                                          SEQ
+                                            SEQ
+                                              SEQ
+                                                SEQ
+                                                  SEQ
+                                                    SEQ
+                                                      SEQ
+                                                        SEQ
+                                                          SEQ
+                                                            SEQ
+                                                              SEQ
+                                                                LET
+                                                                  a
+                                                                  10
+                                                                LET
+                                                                  b
+                                                                  100
+                                                              LET
+                                                                c
+                                                                1000
+                                                            LET
+                                                              d
+                                                              10000
+                                                          LET
+                                                            e
+                                                            100000
+                                                        LET
+                                                          f
+                                                          5
+                                                      LET
+                                                        g
+                                                        50
+                                                    LET
+                                                      h
+                                                      500
+                                                  LET
+                                                    i
+                                                    5000
+                                                LET
+                                                  j
+                                                  50000
+                                              LET
+                                                x
+                                                3.1400
+                                            LET
+                                              y
+                                              2.7180
+                                          LET
+                                            flag
+                                            true
+                                        LET
+                                          check
+                                          false
+                                      LET
+                                        sum_int
+                                        +
+                                          +
+                                            a
+                                            b
+                                          c
+                                    LET
+                                      sum_uint
+                                      +
+                                        +
+                                          f
+                                          g
+                                        h
+                                  LET
+                                    sum_float
+                                    +
+                                      x
+                                      y
+                                LET_MUT
+                                  counter
+                                  0
+                              WHILE
+                                <
+                                  counter
+                                  5
+                                BLOCK
+                                  ASSIGN
+                                    counter
+                                    +
+                                      counter
+                                      1
+                            IF
+                              >
+                                sum_int
+                                100
+                              BLOCK
+                                LET
+                                  big
+                                  *
+                                    sum_int
+                                    2
+                          LET
+                            result
+                            -
+                              sum_int
+                              sum_uint
+                    FUNC
+                      FUNC_PARAMS
+                        calculate_i8
+                        PARAM
+                          n
+                      BLOCK
+                        SEQ
+                          SEQ
+                            SEQ
+                              LET_MUT
+                                sum
+                                0
+                              LET_MUT
+                                i
+                                0
+                            WHILE
+                              <
+                                i
+                                n
+                              BLOCK
+                                SEQ
+                                  ASSIGN
+                                    sum
+                                    +
+                                      sum
+                                      i
+                                  ASSIGN
+                                    i
+                                    +
+                                      i
+                                      1
+                          RETURN
+                            sum
+                  FUNC
+                    FUNC_PARAMS
+                      calculate_i16
+                      PARAM
+                        n
+                    BLOCK
+                      SEQ
+                        SEQ
+                          SEQ
+                            LET_MUT
+                              sum
+                              0
+                            LET_MUT
+                              i
+                              0
+                          WHILE
+                            <
+                              i
+                              n
+                            BLOCK
+                              SEQ
+                                ASSIGN
+                                  sum
+                                  +
+                                    sum
+                                    i
+                                ASSIGN
+                                  i
+                                  +
+                                    i
+                                    1
+                        RETURN
+                          sum
+                FUNC
+                  FUNC_PARAMS
+                    calculate_i64
+                    PARAM
+                      n
+                  BLOCK
+                    SEQ
+                      SEQ
+                        SEQ
+                          LET_MUT
+                            sum
+                            0
+                          LET_MUT
+                            i
+                            0
+                        WHILE
+                          <
+                            i
+                            n
+                          BLOCK
+                            SEQ
+                              ASSIGN
+                                sum
+                                +
+                                  sum
+                                  i
+                              ASSIGN
+                                i
+                                +
+                                  i
+                                  1
+                      RETURN
+                        sum
+              FUNC
+                FUNC_PARAMS
+                  calculate_u32
+                  PARAM
+                    n
+                BLOCK
+                  SEQ
+                    SEQ
+                      SEQ
+                        LET_MUT
+                          sum
+                          0
+                        LET_MUT
+                          i
+                          0
+                      WHILE
+                        <
+                          i
+                          n
+                        BLOCK
+                          SEQ
+                            ASSIGN
+                              sum
+                              +
+                                sum
+                                i
+                            ASSIGN
+                              i
+                              +
+                                i
+                                1
+                    RETURN
+                      sum
+            FUNC
+              FUNC_PARAMS
+                calculate_u64
+                PARAM
+                  n
+              BLOCK
+                SEQ
+                  SEQ
+                    SEQ
+                      LET_MUT
+                        sum
+                        0
+                      LET_MUT
+                        i
+                        0
+                    WHILE
+                      <
+                        i
+                        n
+                      BLOCK
+                        SEQ
+                          ASSIGN
+                            sum
+                            +
+                              sum
+                              i
+                          ASSIGN
+                            i
+                            +
+                              i
+                              1
+                  RETURN
+                    sum
+          FUNC
+            FUNC_PARAMS
+              calculate_f32
+              PARAM
+                x
+            BLOCK
+              SEQ
+                LET
+                  result
+                  *
+                    x
+                    2.0000
+                RETURN
+                  result
+        FUNC
+          FUNC_PARAMS
+            calculate_f64
+            PARAM
+              x
+          BLOCK
+            SEQ
+              LET
+                result
+                *
+                  x
+                  3.0000
+              RETURN
+                result
+      FUNC
+        FUNC_PARAMS
+          test_bool
+          PARAM
+            flag
+        BLOCK
+          IF_ELSE
+            ==
+              flag
+              true
+            BRANCHES
+              BLOCK
+                RETURN
+                  false
+              BLOCK
+                RETURN
+                  true
+    FUNC
+      mixed_types
+      BLOCK
+        SEQ
+          SEQ
+            SEQ
+              SEQ
+                SEQ
+                  SEQ
+                    SEQ
+                      SEQ
+                        SEQ
+                          SEQ
+                            SEQ
+                              SEQ
+                                SEQ
+                                  SEQ
+                                    SEQ
+                                      SEQ
+                                        SEQ
+                                          SEQ
+                                            SEQ
+                                              SEQ
+                                                SEQ
+                                                  LET
+                                                    small
+                                                    10
+                                                  LET
+                                                    medium
+                                                    100
+                                                LET
+                                                  large
+                                                  1000
+                                              LET
+                                                huge
+                                                10000
+                                            LET
+                                              tiny
+                                              5
+                                          LET
+                                            normal
+                                            50
+                                        LET
+                                          big
+                                          500
+                                      LET
+                                        massive
+                                        5000
+                                    LET
+                                      pi
+                                      3.1400
+                                  LET
+                                    e
+                                    2.7180
+                                LET
+                                  yes
+                                  true
+                              LET
+                                no
+                                false
+                            LET
+                              calc1
+                              +
+                                small
+                                medium
+                          LET
+                            calc2
+                            +
+                              medium
+                              large
+                        LET
+                          calc3
+                          +
+                            tiny
+                            normal
+                      LET
+                        calc4
+                        +
+                          normal
+                          big
+                    IF_ELSE
+                      >
+                        calc1
+                        50
+                      BRANCHES
+                        BLOCK
+                          LET
+                            temp
+                            *
+                              calc1
+                              2
+                        BLOCK
+                          LET
+                            temp
+                            +
+                              calc1
+                              10
+                  LET_MUT
+                    loop_i8
+                    0
+                WHILE
+                  <
+                    loop_i8
+                    3
+                  BLOCK
+                    ASSIGN
+                      loop_i8
+                      +
+                        loop_i8
+                        1
+              LET_MUT
+                loop_u16
+                0
+            WHILE
+              <
+                loop_u16
+                5
+              BLOCK
+                ASSIGN
+                  loop_u16
+                  +
+                    loop_u16
+                    1
+          LET
+            final_result
+            +
+              calc1
+              calc3
+=============================================================
+
+=============================================================
+  PHASE 4: SYMBOL TABLE  (Semantic Analysis)                 
+=============================================================
+
+=============================================================
+                      SYMBOL  TABLE                          
+=============================================================
+Idx  Name             Type       Defined?   Scope      Value     
+-------------------------------------------------------------
+0    a                i8         yes        exited     10
+1    b                i16        yes        exited     100
+2    c                i32        yes        exited     1000
+3    d                i64        yes        exited     10000
+4    e                i128       yes        exited     100000
+5    f                u8         yes        exited     5
+6    g                u16        yes        exited     50
+7    h                u32        yes        exited     500
+8    i                u64        yes        exited     5000
+9    j                u128       yes        exited     50000
+10   x                f32        yes        exited     3
+11   y                f64        yes        exited     2
+12   flag             bool       yes        exited     1
+13   check            bool       yes        exited     0
+14   sum_int          i32        yes        exited     1110
+15   sum_uint         u32        yes        exited     555
+16   sum_float        f64        no         exited     -
+17   counter          i64        yes        exited     0
+18   big              i32        yes        exited     2220
+19   result           i32        yes        exited     555
+20   n                i8         no         exited     -
+21   sum              i8         yes        exited     0
+22   i                i8         yes        exited     0
+23   n                i16        no         exited     -
+24   sum              i16        yes        exited     0
+25   i                i16        yes        exited     0
+26   n                i64        no         exited     -
+27   sum              i64        yes        exited     0
+28   i                i64        yes        exited     0
+29   n                u32        no         exited     -
+30   sum              u32        yes        exited     0
+31   i                u32        yes        exited     0
+32   n                u64        no         exited     -
+33   sum              u64        yes        exited     0
+34   i                u64        yes        exited     0
+35   x                f32        no         exited     -
+36   result           f32        no         exited     -
+37   x                f64        no         exited     -
+38   result           f64        no         exited     -
+39   flag             bool       no         exited     -
+40   small            i8         yes        exited     10
+41   medium           i32        yes        exited     100
+42   large            i64        yes        exited     1000
+43   huge             i128       yes        exited     10000
+44   tiny             u8         yes        exited     5
+45   normal           u32        yes        exited     50
+46   big              u64        yes        exited     500
+47   massive          u128       yes        exited     5000
+48   pi               f32        yes        exited     3
+49   e                f64        yes        exited     2
+50   yes              bool       yes        exited     1
+51   no               bool       yes        exited     0
+52   calc1            i32        yes        exited     110
+53   calc2            i64        yes        exited     1100
+54   calc3            u32        yes        exited     55
+55   calc4            u64        yes        exited     550
+56   temp             i32        yes        exited     220
+57   temp             i32        yes        exited     120
+58   loop_i8          i8         yes        exited     0
+59   loop_u16         u16        yes        exited     0
+60   final_result     i32        yes        exited     165
+=============================================================
+
+
+=============================================================
+          INTERMEDIATE CODE  (Three-Address Code)            
+=============================================================
+  a = 10
+  b = 100
+  c = 1000
+  d = 10000
+  e = 100000
+  f = 5
+  g = 50
+  h = 500
+  i = 5000
+  j = 50000
+  x = 3.1400
+  y = 2.7180
+  flag = 1
+  check = 0
+  t0 = 10 + 100
+  t1 = 110 + 1000
+  sum_int = t1
+  t2 = 5 + 50
+  t3 = 55 + 500
+  sum_uint = t3
+  t4 = x + y
+  sum_float = t4
+  counter = 0
+  t5 = counter < 5
+  t6 = 0 + 1
+  counter = t6
+  t7 = sum_int > 100
+  t8 = 1110 * 2
+  big = t8
+  t9 = 1110 - 555
+  result = t9
+  sum = 0
+  i = 0
+  t10 = i < n
+  t11 = 0 + 0
+  sum = t11
+  t12 = 0 + 1
+  i = t12
+  sum = 0
+  i = 0
+  t13 = i < n
+  t14 = 0 + 0
+  sum = t14
+  t15 = 0 + 1
+  i = t15
+  sum = 0
+  i = 0
+  t16 = i < n
+  t17 = 0 + 0
+  sum = t17
+  t18 = 0 + 1
+  i = t18
+  sum = 0
+  i = 0
+  t19 = i < n
+  t20 = 0 + 0
+  sum = t20
+  t21 = 0 + 1
+  i = t21
+  sum = 0
+  i = 0
+  t22 = i < n
+  t23 = 0 + 0
+  sum = t23
+  t24 = 0 + 1
+  i = t24
+  t25 = x * 2.0000
+  result = t25
+  t26 = x * 3.0000
+  result = t26
+  t27 = flag == 1
+  small = 10
+  medium = 100
+  large = 1000
+  huge = 10000
+  tiny = 5
+  normal = 50
+  big = 500
+  massive = 5000
+  pi = 3.1400
+  e = 2.7180
+  yes = 1
+  no = 0
+  t28 = 10 + 100
+  calc1 = t28
+  t29 = 100 + 1000
+  calc2 = t29
+  t30 = 5 + 50
+  calc3 = t30
+  t31 = 50 + 500
+  calc4 = t31
+  t32 = calc1 > 50
+  t33 = 110 * 2
+  temp = t33
+  t34 = 110 + 10
+  temp = t34
+  loop_i8 = 0
+  t35 = loop_i8 < 3
+  t36 = 0 + 1
+  loop_i8 = t36
+  loop_u16 = 0
+  t37 = loop_u16 < 5
+  t38 = 0 + 1
+  loop_u16 = t38
+  t39 = 110 + 55
+  final_result = t39
+=============================================================
+
+
+=============================================================
+     OPTIMISED CODE  (after constant folding)                
+=============================================================
+  a = 10
+  b = 100
+  c = 1000
+  d = 10000
+  e = 100000
+  f = 5
+  g = 50
+  h = 500
+  i = 5000
+  j = 50000
+  x = 3.1400
+  y = 2.7180
+  flag = 1
+  check = 0
+  t0 = 110    ; folded from: 10 + 100
+  t1 = 1110    ; folded from: 110 + 1000
+  sum_int = t1
+  t2 = 55    ; folded from: 5 + 50
+  t3 = 555    ; folded from: 55 + 500
+  sum_uint = t3
+  t4 = x + y
+  sum_float = t4
+  counter = 0
+  t5 = counter < 5
+  t6 = 1    ; folded from: 0 + 1
+  counter = t6
+  t7 = sum_int > 100
+  t8 = 2220    ; folded from: 1110 * 2
+  big = t8
+  t9 = 555    ; folded from: 1110 - 555
+  result = t9
+  sum = 0
+  i = 0
+  t10 = i < n
+  t11 = 0    ; folded from: 0 + 0
+  sum = t11
+  t12 = 1    ; folded from: 0 + 1
+  i = t12
+  sum = 0
+  i = 0
+  t13 = i < n
+  t14 = 0    ; folded from: 0 + 0
+  sum = t14
+  t15 = 1    ; folded from: 0 + 1
+  i = t15
+  sum = 0
+  i = 0
+  t16 = i < n
+  t17 = 0    ; folded from: 0 + 0
+  sum = t17
+  t18 = 1    ; folded from: 0 + 1
+  i = t18
+  sum = 0
+  i = 0
+  t19 = i < n
+  t20 = 0    ; folded from: 0 + 0
+  sum = t20
+  t21 = 1    ; folded from: 0 + 1
+  i = t21
+  sum = 0
+  i = 0
+  t22 = i < n
+  t23 = 0    ; folded from: 0 + 0
+  sum = t23
+  t24 = 1    ; folded from: 0 + 1
+  i = t24
+  t25 = x * 2.0000
+  result = t25
+  t26 = x * 3.0000
+  result = t26
+  t27 = flag == 1
+  small = 10
+  medium = 100
+  large = 1000
+  huge = 10000
+  tiny = 5
+  normal = 50
+  big = 500
+  massive = 5000
+  pi = 3.1400
+  e = 2.7180
+  yes = 1
+  no = 0
+  t28 = 110    ; folded from: 10 + 100
+  calc1 = t28
+  t29 = 1100    ; folded from: 100 + 1000
+  calc2 = t29
+  t30 = 55    ; folded from: 5 + 50
+  calc3 = t30
+  t31 = 550    ; folded from: 50 + 500
+  calc4 = t31
+  t32 = calc1 > 50
+  t33 = 220    ; folded from: 110 * 2
+  temp = t33
+  t34 = 120    ; folded from: 110 + 10
+  temp = t34
+  loop_i8 = 0
+  t35 = loop_i8 < 3
+  t36 = 1    ; folded from: 0 + 1
+  loop_i8 = t36
+  loop_u16 = 0
+  t37 = loop_u16 < 5
+  t38 = 1    ; folded from: 0 + 1
+  loop_u16 = t38
+  t39 = 165    ; folded from: 110 + 55
+  final_result = t39
+=============================================================
+

@@ -25,8 +25,19 @@
 
 typedef enum {
     UNKNOWN_TYPE,
-    INT_TYPE,
-    FLOAT_TYPE
+    I8_TYPE,
+    I16_TYPE,
+    I32_TYPE,
+    I64_TYPE,
+    I128_TYPE,
+    U8_TYPE,
+    U16_TYPE,
+    U32_TYPE,
+    U64_TYPE,
+    U128_TYPE,
+    F32_TYPE,
+    F64_TYPE,
+    BOOL_TYPE
 } VarType;
 
 typedef struct {
@@ -41,14 +52,73 @@ typedef struct {
 
 static Symbol sym_table[MAX_SYMBOLS];
 static int    sym_count_var = 0;
+static int    current_scope = 0;
+
+static int is_integer_type(VarType type) {
+    return (type >= I8_TYPE && type <= U128_TYPE) || type == BOOL_TYPE;
+}
+
+static int is_float_type(VarType type) {
+    return type == F32_TYPE || type == F64_TYPE;
+}
+
+static int is_signed_int_type(VarType type) {
+    return (type >= I8_TYPE && type <= I128_TYPE);
+}
+
+static int is_unsigned_int_type(VarType type) {
+    return (type >= U8_TYPE && type <= U128_TYPE);
+}
+
+/* Check if expr_type can be assigned to declared_type */
+static int types_compatible(VarType declared_type, VarType expr_type) {
+    if (declared_type == expr_type) return 1;
+    if (expr_type == UNKNOWN_TYPE) return 1;
+    
+    /* Allow I32_TYPE literals to be assigned to any integer type */
+    if (expr_type == I32_TYPE && is_integer_type(declared_type)) return 1;
+    
+    /* Allow F64_TYPE literals to be assigned to any float type */
+    if (expr_type == F64_TYPE && is_float_type(declared_type)) return 1;
+    
+    return 0;
+}
 
 void sym_init(void) {
     sym_count_var = 0;
+    current_scope = 0;
     memset(sym_table, 0, sizeof(sym_table));
 }
 
-int sym_lookup(const char *name) {
+void sym_enter_scope(void) {
+    current_scope++;
+}
+
+void sym_exit_scope(void) {
+    /* Mark symbols from current scope as out of scope instead of removing them */
+    /* This preserves the symbol table for analysis after parsing */
     for (int i = 0; i < sym_count_var; i++) {
+        if (sym_table[i].scope == current_scope) {
+            sym_table[i].scope = -1;  /* Mark as out of scope */
+        }
+    }
+    current_scope--;
+}
+
+int sym_lookup(const char *name) {
+    /* Search from most recent (highest index) to oldest */
+    for (int i = sym_count_var - 1; i >= 0; i--) {
+        if (strcmp(sym_table[i].name, name) == 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int sym_lookup_current_scope(const char *name) {
+    /* Only search in current scope */
+    for (int i = sym_count_var - 1; i >= 0; i--) {
+        if (sym_table[i].scope != current_scope) break;
         if (strcmp(sym_table[i].name, name) == 0) {
             return i;
         }
@@ -57,7 +127,7 @@ int sym_lookup(const char *name) {
 }
 
 int sym_insert(const char *name, VarType type) {
-    if (sym_lookup(name) >= 0) return -1;
+    if (sym_lookup_current_scope(name) >= 0) return -1;
     if (sym_count_var >= MAX_SYMBOLS) {
         fprintf(stderr, "Error: symbol table overflow\n");
         return -1;
@@ -66,7 +136,7 @@ int sym_insert(const char *name, VarType type) {
     sym_table[sym_count_var].name[63] = '\0';
     sym_table[sym_count_var].type = type;
     sym_table[sym_count_var].is_defined = 0;
-    sym_table[sym_count_var].scope = 0;
+    sym_table[sym_count_var].scope = current_scope;
     sym_table[sym_count_var].is_const = 0;
     return sym_count_var++;
 }
@@ -100,16 +170,41 @@ void sym_print(void) {
            "Idx", "Name", "Type", "Defined?", "Scope", "Value");
     printf("-------------------------------------------------------------\n");
     for (int i = 0; i < sym_count_var; i++) {
-        const char *type_str = (sym_table[i].type == INT_TYPE) ? "int" :
-                               (sym_table[i].type == FLOAT_TYPE) ? "float" : "unknown";
-        printf("%-4d %-16s %-10s %-10s %-10d ",
+        const char *type_str = "unknown";
+        switch (sym_table[i].type) {
+            case I8_TYPE:    type_str = "i8";    break;
+            case I16_TYPE:   type_str = "i16";   break;
+            case I32_TYPE:   type_str = "i32";   break;
+            case I64_TYPE:   type_str = "i64";   break;
+            case I128_TYPE:  type_str = "i128";  break;
+            case U8_TYPE:    type_str = "u8";    break;
+            case U16_TYPE:   type_str = "u16";   break;
+            case U32_TYPE:   type_str = "u32";   break;
+            case U64_TYPE:   type_str = "u64";   break;
+            case U128_TYPE:  type_str = "u128";  break;
+            case F32_TYPE:   type_str = "f32";   break;
+            case F64_TYPE:   type_str = "f64";   break;
+            case BOOL_TYPE:  type_str = "bool";  break;
+            default:         type_str = "unknown"; break;
+        }
+        
+        const char *scope_str;
+        char scope_buf[16];
+        if (sym_table[i].scope == -1) {
+            scope_str = "exited";
+        } else {
+            sprintf(scope_buf, "%d", sym_table[i].scope);
+            scope_str = scope_buf;
+        }
+        
+        printf("%-4d %-16s %-10s %-10s %-10s ",
                i, sym_table[i].name, type_str,
                sym_table[i].is_defined ? "yes" : "no",
-               sym_table[i].scope);
+               scope_str);
         if (sym_table[i].is_defined) {
-            if (sym_table[i].type == INT_TYPE)
+            if (sym_table[i].type >= I8_TYPE && sym_table[i].type <= BOOL_TYPE)
                 printf("%d", sym_table[i].int_val);
-            else if (sym_table[i].type == FLOAT_TYPE)
+            else if (sym_table[i].type == F32_TYPE || sym_table[i].type == F64_TYPE)
                 printf("%.2f", sym_table[i].float_val);
         } else {
             printf("-");
@@ -344,13 +439,16 @@ static void sem_error(const char *fmt, ...);
 /* ================================================================ */
 
 %token LET MUT FN IF ELSE WHILE RETURN
-%token TYPE_I32 TYPE_F64 TYPE_BOOL
+%token TYPE_I8 TYPE_I16 TYPE_I32 TYPE_I64 TYPE_I128
+%token TYPE_U8 TYPE_U16 TYPE_U32 TYPE_U64 TYPE_U128
+%token TYPE_F32 TYPE_F64 TYPE_BOOL
 %token PRINTLN
 
 %token <ival> INT_LIT
 %token <fval> FLOAT_LIT
 %token <sval> STRING_LIT
 %token <sval> IDENTIFIER
+%token TRUE_LIT FALSE_LIT
 
 %token EQ NEQ LEQ GEQ ARROW
 
@@ -361,7 +459,7 @@ static void sem_error(const char *fmt, ...);
 %type <ival>  type_spec
 %type <node>  program item_list item function_def block stmt_list
 %type <node>  statement declaration assignment if_stmt while_stmt
-%type <node>  println_stmt return_stmt expr_stmt
+%type <node>  println_stmt return_stmt expr_stmt param_list param_list_items param arg_list
 
 /* ================================================================ */
 /*  OPERATOR PRECEDENCE                                             */
@@ -421,12 +519,59 @@ function_def
             $$ = createNode("FUNC", nameNode, $7);
             printf("[Parser] Function '%s' defined (returns type).\n", $2);
         }
+    | FN IDENTIFIER '(' param_list ')' ARROW type_spec block
+        {
+            sym_exit_scope();
+            Node *nameNode = createLeaf($2);
+            Node *funcNode = createNode("FUNC_PARAMS", nameNode, $4);
+            $$ = createNode("FUNC", funcNode, $8);
+            printf("[Parser] Function '%s' defined with parameters.\n", $2);
+        }
+    | FN IDENTIFIER '(' param_list ')' block
+        {
+            sym_exit_scope();
+            Node *nameNode = createLeaf($2);
+            Node *funcNode = createNode("FUNC_PARAMS", nameNode, $4);
+            $$ = createNode("FUNC", funcNode, $6);
+            printf("[Parser] Function '%s' defined with parameters.\n", $2);
+        }
+    ;
+
+param_list
+    : { sym_enter_scope(); } param_list_items
+        {
+            $$ = $2;
+        }
+    ;
+
+param_list_items
+    : param
+        {
+            $$ = $1;
+        }
+    | param_list_items ',' param
+        {
+            $$ = createNode("PARAM_SEQ", $1, $3);
+        }
+    ;
+
+param
+    : IDENTIFIER ':' type_spec
+        {
+            int idx = sym_insert($1, (VarType)$3);
+            if (idx < 0) {
+                sem_error("line %d: parameter '%s' already declared", yylineno, $1);
+            }
+            Node *id = createLeaf($1);
+            $$ = createNode("PARAM", id, NULL);
+            printf("[Parser] Parameter '%s' declared.\n", $1);
+        }
     ;
 
 block
-    : '{' stmt_list '}'
+    : '{' { sym_enter_scope(); } stmt_list '}' { sym_exit_scope(); }
         {
-            $$ = createNode("BLOCK", $2, NULL);
+            $$ = createNode("BLOCK", $3, NULL);
         }
     ;
 
@@ -468,7 +613,7 @@ declaration
                 sem_error("line %d: variable '%s' already declared", yylineno, $2);
             } else {
                 if ($4.is_const) {
-                    if ($4.type == INT_TYPE)
+                    if (is_integer_type($4.type))
                         sym_set_int(idx, $4.int_val);
                     else
                         sym_set_float(idx, $4.float_val);
@@ -485,11 +630,11 @@ declaration
             if (idx < 0) {
                 sem_error("line %d: variable '%s' already declared", yylineno, $2);
             } else {
-                if ($4 != $6.type && $6.type != UNKNOWN_TYPE) {
+                if (!types_compatible((VarType)$4, (VarType)$6.type)) {
                     sem_error("line %d: type mismatch in declaration of '%s'", yylineno, $2);
                 }
                 if ($6.is_const) {
-                    if ($4 == INT_TYPE)
+                    if (is_integer_type($4))
                         sym_set_int(idx, $6.int_val);
                     else
                         sym_set_float(idx, $6.float_val);
@@ -507,7 +652,7 @@ declaration
                 sem_error("line %d: variable '%s' already declared", yylineno, $3);
             } else {
                 if ($5.is_const) {
-                    if ($5.type == INT_TYPE)
+                    if (is_integer_type($5.type))
                         sym_set_int(idx, $5.int_val);
                     else
                         sym_set_float(idx, $5.float_val);
@@ -524,11 +669,11 @@ declaration
             if (idx < 0) {
                 sem_error("line %d: variable '%s' already declared", yylineno, $3);
             } else {
-                if ($5 != $7.type && $7.type != UNKNOWN_TYPE) {
+                if (!types_compatible((VarType)$5, (VarType)$7.type)) {
                     sem_error("line %d: type mismatch in declaration of '%s'", yylineno, $3);
                 }
                 if ($7.is_const) {
-                    if ($5 == INT_TYPE)
+                    if (is_integer_type($5))
                         sym_set_int(idx, $7.int_val);
                     else
                         sym_set_float(idx, $7.float_val);
@@ -542,9 +687,19 @@ declaration
     ;
 
 type_spec
-    : TYPE_I32   { $$ = INT_TYPE;   }
-    | TYPE_F64   { $$ = FLOAT_TYPE; }
-    | TYPE_BOOL  { $$ = INT_TYPE;   }
+    : TYPE_I8    { $$ = I8_TYPE;    }
+    | TYPE_I16   { $$ = I16_TYPE;   }
+    | TYPE_I32   { $$ = I32_TYPE;   }
+    | TYPE_I64   { $$ = I64_TYPE;   }
+    | TYPE_I128  { $$ = I128_TYPE;  }
+    | TYPE_U8    { $$ = U8_TYPE;    }
+    | TYPE_U16   { $$ = U16_TYPE;   }
+    | TYPE_U32   { $$ = U32_TYPE;   }
+    | TYPE_U64   { $$ = U64_TYPE;   }
+    | TYPE_U128  { $$ = U128_TYPE;  }
+    | TYPE_F32   { $$ = F32_TYPE;   }
+    | TYPE_F64   { $$ = F64_TYPE;   }
+    | TYPE_BOOL  { $$ = BOOL_TYPE;  }
     ;
 
 assignment
@@ -555,7 +710,7 @@ assignment
                 sem_error("line %d: undeclared variable '%s'", yylineno, $1);
             } else {
                 VarType declared = sym_get_type(idx);
-                if (declared != UNKNOWN_TYPE && $3.type != UNKNOWN_TYPE && declared != (VarType)$3.type) {
+                if (!types_compatible(declared, (VarType)$3.type)) {
                     sem_error("line %d: type mismatch in assignment to '%s'", yylineno, $1);
                 }
                 tac_emit($1, $3.name, NULL, NULL);
@@ -628,18 +783,18 @@ expression
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            if ($1.is_const && $3.is_const && $1.type == INT_TYPE && $3.type == INT_TYPE) {
+            if ($1.is_const && $3.is_const && is_integer_type($1.type) && is_integer_type($3.type)) {
                 $$.is_const  = 1;
                 $$.int_val   = $1.int_val + $3.int_val;
                 $$.float_val = (double)$$.int_val;
-                $$.type      = INT_TYPE;
+                $$.type      = I32_TYPE;
                 char a[32], b[32];
                 sprintf(a, "%d", $1.int_val);
                 sprintf(b, "%d", $3.int_val);
                 tac_emit($$.name, a, "+", b);
             } else {
                 $$.is_const = 0;
-                $$.type = ($1.type == FLOAT_TYPE || $3.type == FLOAT_TYPE) ? FLOAT_TYPE : INT_TYPE;
+                $$.type = (is_float_type($1.type) || is_float_type($3.type)) ? F64_TYPE : I32_TYPE;
                 tac_emit($$.name, $1.name, "+", $3.name);
             }
             $$.node = createNode("+", $1.node, $3.node);
@@ -648,18 +803,18 @@ expression
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            if ($1.is_const && $3.is_const && $1.type == INT_TYPE && $3.type == INT_TYPE) {
+            if ($1.is_const && $3.is_const && is_integer_type($1.type) && is_integer_type($3.type)) {
                 $$.is_const  = 1;
                 $$.int_val   = $1.int_val - $3.int_val;
                 $$.float_val = (double)$$.int_val;
-                $$.type      = INT_TYPE;
+                $$.type      = I32_TYPE;
                 char a[32], b[32];
                 sprintf(a, "%d", $1.int_val);
                 sprintf(b, "%d", $3.int_val);
                 tac_emit($$.name, a, "-", b);
             } else {
                 $$.is_const = 0;
-                $$.type = ($1.type == FLOAT_TYPE || $3.type == FLOAT_TYPE) ? FLOAT_TYPE : INT_TYPE;
+                $$.type = (is_float_type($1.type) || is_float_type($3.type)) ? F64_TYPE : I32_TYPE;
                 tac_emit($$.name, $1.name, "-", $3.name);
             }
             $$.node = createNode("-", $1.node, $3.node);
@@ -668,7 +823,7 @@ expression
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            $$.type = INT_TYPE;
+            $$.type = I32_TYPE;
             $$.is_const = 0;
             tac_emit($$.name, $1.name, "<", $3.name);
             $$.node = createNode("<", $1.node, $3.node);
@@ -677,7 +832,7 @@ expression
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            $$.type = INT_TYPE;
+            $$.type = I32_TYPE;
             $$.is_const = 0;
             tac_emit($$.name, $1.name, ">", $3.name);
             $$.node = createNode(">", $1.node, $3.node);
@@ -686,7 +841,7 @@ expression
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            $$.type = INT_TYPE;
+            $$.type = I32_TYPE;
             $$.is_const = 0;
             tac_emit($$.name, $1.name, "==", $3.name);
             $$.node = createNode("==", $1.node, $3.node);
@@ -695,7 +850,7 @@ expression
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            $$.type = INT_TYPE;
+            $$.type = I32_TYPE;
             $$.is_const = 0;
             tac_emit($$.name, $1.name, "!=", $3.name);
             $$.node = createNode("!=", $1.node, $3.node);
@@ -704,7 +859,7 @@ expression
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            $$.type = INT_TYPE;
+            $$.type = I32_TYPE;
             $$.is_const = 0;
             tac_emit($$.name, $1.name, "<=", $3.name);
             $$.node = createNode("<=", $1.node, $3.node);
@@ -713,7 +868,7 @@ expression
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            $$.type = INT_TYPE;
+            $$.type = I32_TYPE;
             $$.is_const = 0;
             tac_emit($$.name, $1.name, ">=", $3.name);
             $$.node = createNode(">=", $1.node, $3.node);
@@ -729,18 +884,18 @@ term
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            if ($1.is_const && $3.is_const && $1.type == INT_TYPE && $3.type == INT_TYPE) {
+            if ($1.is_const && $3.is_const && is_integer_type($1.type) && is_integer_type($3.type)) {
                 $$.is_const  = 1;
                 $$.int_val   = $1.int_val * $3.int_val;
                 $$.float_val = (double)$$.int_val;
-                $$.type      = INT_TYPE;
+                $$.type      = I32_TYPE;
                 char a[32], b[32];
                 sprintf(a, "%d", $1.int_val);
                 sprintf(b, "%d", $3.int_val);
                 tac_emit($$.name, a, "*", b);
             } else {
                 $$.is_const = 0;
-                $$.type = ($1.type == FLOAT_TYPE || $3.type == FLOAT_TYPE) ? FLOAT_TYPE : INT_TYPE;
+                $$.type = (is_float_type($1.type) || is_float_type($3.type)) ? F64_TYPE : I32_TYPE;
                 tac_emit($$.name, $1.name, "*", $3.name);
             }
             $$.node = createNode("*", $1.node, $3.node);
@@ -749,18 +904,18 @@ term
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            if ($1.is_const && $3.is_const && $1.type == INT_TYPE && $3.type == INT_TYPE) {
+            if ($1.is_const && $3.is_const && is_integer_type($1.type) && is_integer_type($3.type)) {
                 $$.is_const  = 1;
                 $$.int_val   = ($3.int_val != 0) ? $1.int_val / $3.int_val : 0;
                 $$.float_val = (double)$$.int_val;
-                $$.type      = INT_TYPE;
+                $$.type      = I32_TYPE;
                 char a[32], b[32];
                 sprintf(a, "%d", $1.int_val);
                 sprintf(b, "%d", $3.int_val);
                 tac_emit($$.name, a, "/", b);
             } else {
                 $$.is_const = 0;
-                $$.type = ($1.type == FLOAT_TYPE || $3.type == FLOAT_TYPE) ? FLOAT_TYPE : INT_TYPE;
+                $$.type = (is_float_type($1.type) || is_float_type($3.type)) ? F64_TYPE : I32_TYPE;
                 tac_emit($$.name, $1.name, "/", $3.name);
             }
             $$.node = createNode("/", $1.node, $3.node);
@@ -775,7 +930,7 @@ factor
     : INT_LIT
         {
             sprintf($$.name, "%d", $1);
-            $$.type      = INT_TYPE;
+            $$.type      = I32_TYPE;
             $$.is_const  = 1;
             $$.int_val   = $1;
             $$.float_val = (double)$1;
@@ -786,13 +941,31 @@ factor
     | FLOAT_LIT
         {
             sprintf($$.name, "%.4f", $1);
-            $$.type      = FLOAT_TYPE;
+            $$.type      = F64_TYPE;
             $$.is_const  = 1;
             $$.float_val = $1;
             $$.int_val   = (int)$1;
             char buf[32];
             sprintf(buf, "%.4f", $1);
             $$.node = createLeaf(buf);
+        }
+    | TRUE_LIT
+        {
+            sprintf($$.name, "1");
+            $$.type      = BOOL_TYPE;
+            $$.is_const  = 1;
+            $$.int_val   = 1;
+            $$.float_val = 1.0;
+            $$.node = createLeaf("true");
+        }
+    | FALSE_LIT
+        {
+            sprintf($$.name, "0");
+            $$.type      = BOOL_TYPE;
+            $$.is_const  = 1;
+            $$.int_val   = 0;
+            $$.float_val = 0.0;
+            $$.node = createLeaf("false");
         }
     | IDENTIFIER
         {
@@ -816,6 +989,32 @@ factor
             }
             $$.node = createLeaf($1);
         }
+    | IDENTIFIER '(' ')'
+        {
+            char *t = tac_new_temp();
+            strcpy($$.name, t);
+            $$.type = I32_TYPE;
+            $$.is_const = 0;
+            char call_str[128];
+            sprintf(call_str, "call %s", $1);
+            tac_emit($$.name, call_str, NULL, NULL);
+            Node *funcName = createLeaf($1);
+            $$.node = createNode("CALL", funcName, NULL);
+            printf("[Parser] Function call '%s()'\n", $1);
+        }
+    | IDENTIFIER '(' arg_list ')'
+        {
+            char *t = tac_new_temp();
+            strcpy($$.name, t);
+            $$.type = I32_TYPE;
+            $$.is_const = 0;
+            char call_str[128];
+            sprintf(call_str, "call %s", $1);
+            tac_emit($$.name, call_str, NULL, NULL);
+            Node *funcName = createLeaf($1);
+            $$.node = createNode("CALL", funcName, $3);
+            printf("[Parser] Function call '%s(...)'\n", $1);
+        }
     | '(' expression ')'
         {
             $$ = $2;
@@ -824,11 +1023,11 @@ factor
         {
             char *t = tac_new_temp();
             strcpy($$.name, t);
-            if ($2.is_const && $2.type == INT_TYPE) {
+            if ($2.is_const && is_integer_type($2.type)) {
                 $$.is_const  = 1;
                 $$.int_val   = -$2.int_val;
                 $$.float_val = (double)$$.int_val;
-                $$.type      = INT_TYPE;
+                $$.type      = I32_TYPE;
                 char arg[32];
                 sprintf(arg, "%d", $2.int_val);
                 tac_emit($$.name, "0", "-", arg);
@@ -838,6 +1037,17 @@ factor
                 tac_emit($$.name, "0", "-", $2.name);
             }
             $$.node = createNode("NEG", $2.node, NULL);
+        }
+    ;
+
+arg_list
+    : expression
+        {
+            $$ = $1.node;
+        }
+    | arg_list ',' expression
+        {
+            $$ = createNode("ARG_SEQ", $1, $3.node);
         }
     ;
 
