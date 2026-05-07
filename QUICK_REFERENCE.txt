@@ -1,0 +1,132 @@
+============================================================
+    MINI RUST COMPILER - QUICK REFERENCE CARD
+============================================================
+
+INSTALLATION (First Time)
+============================================================
+1. Install MSYS2 from https://www.msys2.org/
+2. Open MSYS2 terminal and run:
+   pacman -S flex bison mingw-w64-x86_64-gcc
+   pacman -S mingw-w64-x86_64-gtk3  (for GUI)
+3. Add to PATH: C:\msys64\mingw64\bin
+
+VERIFY INSTALLATION
+============================================================
+win_flex --version
+win_bison --version
+gcc --version
+
+BUILD COMMANDS
+============================================================
+Standalone (Terminal):
+  cd compiler_design
+  build_standalone.bat
+
+GUI Version:
+  cd compiler_design
+  build_gui.bat
+
+RUN COMMANDS
+============================================================
+Standalone:
+  compiler_standalone.exe <file.rs>
+  compiler_standalone.exe test.rs
+
+GUI:
+  compiler_gui.exe
+
+TEST COMMANDS
+============================================================
+Run all tests:
+  run_all_tests.bat
+
+Individual tests:
+  compiler_standalone.exe test.rs
+  compiler_standalone.exe test_all_types.rs
+  compiler_standalone.exe test_complex.rs
+
+SUPPORTED TYPES
+============================================================
+Signed:   i8, i16, i32, i64, i128
+Unsigned: u8, u16, u32, u64, u128
+Float:    f32, f64
+Boolean:  bool
+
+SYNTAX EXAMPLES
+============================================================
+Variables:
+  let x: i32 = 10;           // Immutable
+  let mut y: i32 = 20;       // Mutable
+  let z = 30;                // Type inference
+
+Operators:
+  x + y                      // Addition
+  x - y                      // Subtraction
+  x * y                      // Multiplication
+  x / y                      // Division
+  x < y, x > y              // Comparison
+  x == y, x != y            // Equality
+
+Control Flow:
+  if x > 10 { ... }
+  if x > 10 { ... } else { ... }
+  while x < 100 { ... }
+
+Functions:
+  fn name() { }
+  fn name(x: i32) { }
+  fn name(x: i32) -> i32 { return x * 2; }
+
+Output:
+  println!("text");
+
+COMPILATION OUTPUT
+============================================================
+Phase 1: Token Stream
+Phase 2: Parsing Result
+Phase 3: Parse Tree
+Phase 4: Symbol Table
+Phase 5: Intermediate Code (TAC)
+Phase 6: Optimized Code
+
+TROUBLESHOOTING
+============================================================
+Build fails:
+  - Check Flex, Bison, GCC installed
+  - Verify PATH includes tool directories
+  - Try standalone version first
+
+Parsing errors:
+  - Check semicolons after statements
+  - Verify matching braces { }
+  - See example files
+
+GUI build fails:
+  - Install GTK3: pacman -S mingw-w64-x86_64-gtk3
+  - Use standalone version as alternative
+
+QUICK START (3 STEPS)
+============================================================
+1. cd compiler_design
+2. build_standalone.bat
+3. compiler_standalone.exe test.rs
+
+DOCUMENTATION
+============================================================
+GETTING_STARTED.txt  - Complete setup guide
+README.md            - Project overview
+ARCHITECTURE.txt     - System design
+FIXES_APPLIED.md     - Recent changes
+TEST_RESULTS.md      - Test coverage
+
+PROJECT STATUS
+============================================================
+Version: 1.0
+Status: Production Ready ✅
+Tests: All Passing ✅
+Types: 13 Supported
+Errors: 0 Semantic Errors
+
+============================================================
+For detailed instructions, see GETTING_STARTED.txt
+============================================================

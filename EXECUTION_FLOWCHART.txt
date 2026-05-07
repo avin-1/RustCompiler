@@ -1,0 +1,383 @@
+============================================================
+    MINI RUST COMPILER - EXECUTION FLOWCHART
+============================================================
+
+┌─────────────────────────────────────────────────────────┐
+│         GETTING THE CODE FROM GITHUB                    │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+              git clone <repository-url>
+                          │
+                          ▼
+              cd RustCompiler_Mine
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│              READ DOCUMENTATION                         │
+│  • GETTING_STARTED.txt (detailed guide)                │
+│  • README.md (overview)                                 │
+│  • QUICK_REFERENCE.txt (quick commands)                │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│           INSTALL PREREQUISITES                         │
+│                                                         │
+│  Option 1: MSYS2 (Recommended)                         │
+│  ┌──────────────────────────────────────┐             │
+│  │ 1. Download MSYS2                    │             │
+│  │ 2. pacman -S flex bison gcc          │             │
+│  │ 3. pacman -S gtk3 (for GUI)          │             │
+│  │ 4. Add to PATH                       │             │
+│  └──────────────────────────────────────┘             │
+│                                                         │
+│  Option 2: Individual Tools                            │
+│  ┌──────────────────────────────────────┐             │
+│  │ 1. Install Flex (win_flex)           │             │
+│  │ 2. Install Bison (win_bison)         │             │
+│  │ 3. Install MinGW-w64 (gcc)           │             │
+│  │ 4. Install GTK3 (for GUI)            │             │
+│  │ 5. Add all to PATH                   │             │
+│  └──────────────────────────────────────┘             │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│              VERIFY INSTALLATION                        │
+│                                                         │
+│  win_flex --version   ✓                                │
+│  win_bison --version  ✓                                │
+│  gcc --version        ✓                                │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+              ┌───────────┴───────────┐
+              │                       │
+              ▼                       ▼
+    ┌──────────────────┐    ┌──────────────────┐
+    │  STANDALONE      │    │   GUI VERSION    │
+    │  (Terminal)      │    │   (Graphical)    │
+    └──────────────────┘    └──────────────────┘
+              │                       │
+              ▼                       ▼
+
+============================================================
+         STANDALONE VERSION EXECUTION FLOW
+============================================================
+
+┌─────────────────────────────────────────────────────────┐
+│  STEP 1: Navigate to compiler directory                │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+                cd compiler_design
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│  STEP 2: Build the compiler                            │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+              build_standalone.bat
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  Build Process:                 │
+        │  1. Run Flex on lexer.l        │
+        │     → generates lex.yy.c       │
+        │  2. Run Bison on parser.y      │
+        │     → generates parser.tab.c   │
+        │  3. Compile with GCC           │
+        │     → creates .exe             │
+        └─────────────────────────────────┘
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  Build Success?                 │
+        └─────────────────────────────────┘
+                │                 │
+            YES │                 │ NO
+                │                 │
+                ▼                 ▼
+    ┌──────────────────┐  ┌──────────────────┐
+    │ compiler_        │  │ Check errors:    │
+    │ standalone.exe   │  │ • Flex installed?│
+    │ created ✓        │  │ • Bison installed│
+    └──────────────────┘  │ • GCC installed? │
+                │         │ • PATH correct?  │
+                │         └──────────────────┘
+                ▼
+┌─────────────────────────────────────────────────────────┐
+│  STEP 3: Test the compiler                             │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  Choose test method:            │
+        │                                 │
+        │  A. Single file test            │
+        │     compiler_standalone.exe     │
+        │     test.rs                     │
+        │                                 │
+        │  B. All tests                   │
+        │     run_all_tests.bat           │
+        │                                 │
+        │  C. Your own file               │
+        │     compiler_standalone.exe     │
+        │     mycode.rs                   │
+        └─────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│  STEP 4: View compilation output                       │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  Output shows:                  │
+        │  ✓ Phase 1: Token Stream        │
+        │  ✓ Phase 2: Parsing Result      │
+        │  ✓ Phase 3: Parse Tree          │
+        │  ✓ Phase 4: Symbol Table        │
+        │  ✓ Phase 5: Intermediate Code   │
+        │  ✓ Phase 6: Optimized Code      │
+        └─────────────────────────────────┘
+                          │
+                          ▼
+                    ┌─────────┐
+                    │ SUCCESS │
+                    └─────────┘
+
+============================================================
+            GUI VERSION EXECUTION FLOW
+============================================================
+
+┌─────────────────────────────────────────────────────────┐
+│  STEP 1: Navigate to compiler directory                │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+                cd compiler_design
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│  STEP 2: Ensure GTK3 is installed                      │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  GTK3 installed?                │
+        └─────────────────────────────────┘
+                │                 │
+            YES │                 │ NO
+                │                 │
+                ▼                 ▼
+    ┌──────────────────┐  ┌──────────────────┐
+    │ Continue to      │  │ Install GTK3:    │
+    │ build            │  │ pacman -S        │
+    └──────────────────┘  │ mingw-w64-       │
+                │         │ x86_64-gtk3      │
+                │         └──────────────────┘
+                │                 │
+                └────────┬────────┘
+                         │
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│  STEP 3: Build the GUI compiler                        │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+                  build_gui.bat
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  Build Process:                 │
+        │  1. Run Flex on lexer.l        │
+        │  2. Run Bison on parser.y      │
+        │  3. Compile with GCC + GTK3    │
+        │     → creates compiler_gui.exe │
+        └─────────────────────────────────┘
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  Build Success?                 │
+        └─────────────────────────────────┘
+                │                 │
+            YES │                 │ NO
+                │                 │
+                ▼                 ▼
+    ┌──────────────────┐  ┌──────────────────┐
+    │ compiler_gui.exe │  │ Use standalone   │
+    │ created ✓        │  │ version instead  │
+    └──────────────────┘  └──────────────────┘
+                │
+                ▼
+┌─────────────────────────────────────────────────────────┐
+│  STEP 4: Launch the GUI                                │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+                compiler_gui.exe
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  GUI Window Opens               │
+        │  ┌───────────────────────────┐  │
+        │  │  Menu Bar                 │  │
+        │  ├───────────────────────────┤  │
+        │  │                           │  │
+        │  │  Code Editor              │  │
+        │  │  (with syntax highlight)  │  │
+        │  │                           │  │
+        │  ├───────────────────────────┤  │
+        │  │  [Compile] [Clear]        │  │
+        │  ├───────────────────────────┤  │
+        │  │                           │  │
+        │  │  Output Panel             │  │
+        │  │  (compilation results)    │  │
+        │  │                           │  │
+        │  └───────────────────────────┘  │
+        └─────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│  STEP 5: Use the GUI                                   │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  Actions:                       │
+        │                                 │
+        │  1. Write/Load Rust code        │
+        │     • Type in editor            │
+        │     • File → Open               │
+        │                                 │
+        │  2. Compile                     │
+        │     • Click "Compile" button    │
+        │     • Or press Ctrl+Enter       │
+        │                                 │
+        │  3. View results                │
+        │     • Output in bottom panel    │
+        │     • All 6 phases shown        │
+        │                                 │
+        │  4. Save work                   │
+        │     • File → Save               │
+        │     • File → Save As            │
+        └─────────────────────────────────┘
+                          │
+                          ▼
+                    ┌─────────┐
+                    │ SUCCESS │
+                    └─────────┘
+
+============================================================
+              TESTING WORKFLOW
+============================================================
+
+┌─────────────────────────────────────────────────────────┐
+│  Run automated tests                                    │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+              run_all_tests.bat
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  Tests executed:                │
+        │  1. test.rs                     │
+        │     → Basic functionality       │
+        │  2. test_all_types.rs           │
+        │     → All 13 types              │
+        │  3. test_complex.rs             │
+        │     → Complex expressions       │
+        └─────────────────────────────────┘
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  Results displayed:             │
+        │  ✓ PASS/FAIL status             │
+        │  ✓ Symbol count                 │
+        │  ✓ Error count                  │
+        │  ✓ Summary report               │
+        └─────────────────────────────────┘
+                          │
+                          ▼
+        ┌─────────────────────────────────┐
+        │  All tests passing?             │
+        └─────────────────────────────────┘
+                │                 │
+            YES │                 │ NO
+                │                 │
+                ▼                 ▼
+    ┌──────────────────┐  ┌──────────────────┐
+    │ Compiler ready   │  │ Check:           │
+    │ to use! ✓        │  │ • Build correct? │
+    └──────────────────┘  │ • Files present? │
+                          │ • Syntax valid?  │
+                          └──────────────────┘
+
+============================================================
+           TROUBLESHOOTING DECISION TREE
+============================================================
+
+                    Problem?
+                        │
+        ┌───────────────┼───────────────┐
+        │               │               │
+        ▼               ▼               ▼
+    Build Error    Runtime Error   Output Error
+        │               │               │
+        ▼               ▼               ▼
+    ┌────────┐    ┌────────┐    ┌────────┐
+    │ Check: │    │ Check: │    │ Check: │
+    │ • Flex │    │ • Syntax│    │ • Input│
+    │ • Bison│    │ • Types │    │ • Code │
+    │ • GCC  │    │ • Scope │    │ • Valid│
+    │ • PATH │    │ • Braces│    └────────┘
+    └────────┘    └────────┘
+        │               │
+        ▼               ▼
+    See             See
+    GETTING_        Example
+    STARTED.txt     Files
+
+============================================================
+              QUICK COMMAND SUMMARY
+============================================================
+
+First Time Setup:
+  1. cd compiler_design
+  2. build_standalone.bat
+  3. compiler_standalone.exe test.rs
+
+Daily Usage (Standalone):
+  compiler_standalone.exe myfile.rs
+
+Daily Usage (GUI):
+  compiler_gui.exe
+
+Run Tests:
+  run_all_tests.bat
+
+Get Help:
+  • Read GETTING_STARTED.txt
+  • Check QUICK_REFERENCE.txt
+  • See example files
+
+============================================================
+                    SUCCESS PATH
+============================================================
+
+    Clone Repo → Install Tools → Build → Test → Use
+         ↓            ↓           ↓       ↓      ↓
+      ✓ Done      ✓ Done      ✓ Done  ✓ Pass  ✓ Ready
+
+============================================================
+
+For detailed instructions at any step, refer to:
+  • GETTING_STARTED.txt (complete guide)
+  • README.md (overview)
+  • QUICK_REFERENCE.txt (commands)
+
+============================================================

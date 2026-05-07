@@ -1,0 +1,222 @@
+
+
+PREREQUISITES
+
+Before you begin, ensure you have the following installed:
+
+1. Flex (Lexical Analyzer Generator)
+   - Download: https://github.com/lexxmark/winflexbison/releases
+   - Install win_flex.exe to your PATH
+   - Or use MSYS2: pacman -S flex
+
+2. Bison (Parser Generator)
+   - Download: https://github.com/lexxmark/winflexbison/releases
+   - Install win_bison.exe to your PATH
+   - Or use MSYS2: pacman -S bison
+
+3. GCC (GNU Compiler Collection)
+   - Download MinGW-w64: https://www.mingw-w64.org/
+   - Or use MSYS2: pacman -S mingw-w64-x86_64-gcc
+   - Ensure gcc.exe is in your PATH
+
+4. GTK3 Development Libraries (for GUI version only)
+   - Install MSYS2: https://www.msys2.org/
+   - Run: pacman -S mingw-w64-x86_64-gtk3
+   - Add GTK bin directory to PATH
+
+To verify installations, open Command Prompt and run:
+  win_flex --version
+  win_bison --version
+  gcc --version
+
+
+
+QUICK START - STANDALONE (TERMINAL) VERSION[NO GTK3 Needed]
+
+The standalone version is the easiest to build and run.
+It works in the terminal without any GUI dependencies.
+
+Step 1: Navigate to the compiler directory
+  cd compiler_design
+
+Step 2: Build the standalone compiler
+  build_standalone.bat
+
+  This will:
+  - Run Flex on lexer.l
+  - Run Bison on parser_standalone.y
+  - Compile with GCC
+  - Create compiler_standalone.exe
+
+Step 3: Test the compiler
+  compiler_standalone.exe test.rs
+
+  You should see output showing:
+  - Lexical Analysis (Token Stream)
+  - Syntax Analysis (Parsing Result)
+  - Parse Tree
+  - Symbol Table
+  - Intermediate Code (TAC)
+  - Optimized Code
+
+  This will test all example files and show results.
+
+
+
+
+BUILDING THE GUI VERSION
+The GUI version provides a graphical interface with syntax highlighting
+and interactive compilation.
+
+Prerequisites:
+  - All tools from above (Flex, Bison, GCC)
+  - GTK3 development libraries installed
+  - pkg-config in PATH (comes with MSYS2)
+
+Step 1: Navigate to the compiler directory
+  cd compiler_design
+
+Step 2: Build the GUI compiler
+  build_gui.bat
+
+  This will:
+  - Run Flex on lexer.l
+  - Run Bison on parser_standalone.y
+  - Compile with GCC and link GTK3 libraries
+  - Create compiler_gui.exe
+
+Step 3: Run the GUI
+  compiler_gui.exe
+
+  The GUI window will open with:
+  - Text editor for Rust code
+  - Compile button
+  - Output display area
+  - Syntax highlighting
+
+USING THE STANDALONE COMPILER
+
+Basic Usage:
+  compiler_standalone.exe <input_file.rs>
+
+Examples:
+  compiler_standalone.exe test.rs
+  compiler_standalone.exe test_all_types.rs
+  compiler_standalone.exe test_complex.rs
+
+Input from stdin:
+  compiler_standalone.exe < input.rs
+
+The compiler will display:
+  1. Token stream from lexical analysis
+  2. Parsing result (success or errors)
+  3. Parse tree structure
+  4. Symbol table with all variables
+  5. Three-address code (TAC)
+  6. Optimized code with constant folding
+
+
+USING THE GUI COMPILER
+Step 1: Launch the GUI
+  compiler_gui.exe
+
+Step 2: Write or load Rust code
+  - Type code directly in the editor
+  - Or use File menu to load .rs files
+
+Step 3: Compile
+  - Click "Compile" button
+  - Or press Ctrl+Enter
+
+Step 4: View results
+  - Output appears in the bottom panel
+  - Shows all compilation phases
+  - Errors highlighted in red
+
+Features:
+  - Syntax highlighting
+  - Line numbers
+  - Real-time compilation
+  - Save/Load files
+  - Clear output
+
+EXAMPLE RUST CODE
+Try this simple example (save as hello.rs):
+
+fn main() {
+    let x: i32 = 10;
+    let y: i32 = 20;
+    let z: i32 = x + y;
+    
+    if z > 25 {
+        let result: i32 = z * 2;
+    }
+}
+
+Compile it:
+  compiler_standalone.exe hello.rs
+
+
+TESTING THE COMPILER
+The project includes several test files:
+
+1. test.rs
+   - Basic functionality test
+   - Variables, arithmetic, control flow
+
+2. test_all_types.rs
+   - Tests all 13 data types
+   - i8, i16, i32, i64, i128
+   - u8, u16, u32, u64, u128
+   - f32, f64, bool
+
+3. test_complex.rs
+   - Complex expressions
+   - Nested operations
+   - Function calls
+   - Recursive functions
+
+Run all tests:
+  run_all_tests.bat
+
+This will compile all test files and show:
+  - Pass/Fail status
+  - Number of symbols in symbol table
+  - Any semantic errors
+
+COMMAND REFERENCE
+Build Commands:
+  build_standalone.bat     - Build terminal version
+  build_gui.bat           - Build GUI version
+
+Run Commands:
+  compiler_standalone.exe <file.rs>  - Compile a file
+  compiler_gui.exe                   - Launch GUI
+
+Test Commands:
+  run_all_tests.bat       - Run all tests
+  compiler_standalone.exe test.rs
+  compiler_standalone.exe test_all_types.rs
+  compiler_standalone.exe test_complex.rs
+
+Clean Commands:
+  del *.exe               - Remove executables
+  del lex.yy.c            - Remove generated lexer
+  del parser_standalone.tab.* - Remove generated parser
+
+QUICK REFERENCE
+Minimal Setup (Standalone Only):
+  1. Install: Flex, Bison, GCC
+  2. Run: build_standalone.bat
+  3. Test: compiler_standalone.exe test.rs
+
+Full Setup (GUI + Standalone):
+  1. Install: Flex, Bison, GCC, GTK3
+  2. Run: build_gui.bat
+  3. Launch: compiler_gui.exe
+
+First Time User:
+  1. cd compiler_design
+  2. build_standalone.bat
+  3. compiler_standalone.exe test.rs
+
