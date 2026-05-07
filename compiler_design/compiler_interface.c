@@ -18,7 +18,7 @@ extern int semantic_errors;
 extern int yylineno;
 
 /* Symbol table functions */
-extern void sym_init(void);
+extern void sym_init(void); 
 extern void sym_print(void);
 extern int sym_count(void);
 
