@@ -280,7 +280,7 @@ void tac_print(void) {
 }
 
 static int is_integer_literal(const char *s) {
-    if (!s || !*s) return 0;
+    if (!s || !*s) return 0;   //checks if pointer is null or if empty string
     if (*s == '-') s++;
     if (!*s) return 0;
     while (*s) {
@@ -344,7 +344,7 @@ Node *createNode(const char *name, Node *left, Node *right) {
     Node *n = (Node *)malloc(sizeof(Node));
     if (!n) {
         fprintf(stderr, "Error: out of memory in createNode\n");
-        exit(1);
+        exit(1);        //abnormal termination of program
     }
     strncpy(n->label, name, 49);
     n->label[49] = '\0';
@@ -405,7 +405,7 @@ extern int  yylineno;
 extern FILE *yyin;
 extern char *yytext;
 
-void yyerror(const char *msg);
+void yyerror(const char *msg);        //called when syntax error occurs
 
 int debug_tokens    = 1;
 int has_errors      = 0;
@@ -420,12 +420,12 @@ static void sem_error(const char *fmt, ...);
 /*  YYLVAL  union                                                   */
 /* ================================================================ */
 %union {
-    int    ival;
-    double fval;
-    char   sval[64];
-    struct Node *node;
-    struct {
-        char   name[64];
+    int    ival;        //integer literals
+    double fval;        //float literals
+    char   sval[64];        //string literals and identifiers
+    struct Node *node;      //parse tree nodes
+    struct {                //expr semantic values
+        char   name[64];        //tac temp name
         int    type;
         int    is_const;
         int    int_val;
